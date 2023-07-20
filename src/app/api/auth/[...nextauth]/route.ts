@@ -12,6 +12,7 @@ const handler = NextAuth({
       clientSecret: CLIENT_SECRET,
     }),
   ],
+  secret: process.env.SECRET,
   pages: {
     signIn: "/auth/signin", // Set the path to your custom login page
   },
