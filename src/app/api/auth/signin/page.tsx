@@ -11,10 +11,6 @@ interface Provider {
   name: string;
 }
 
-// export const metadata = {
-//   title: "Signin / Login",
-// };
-
 const page = () => {
   const { data: session } = useSession();
   const [providers, setProviders] = useState<Provider | null>(null);

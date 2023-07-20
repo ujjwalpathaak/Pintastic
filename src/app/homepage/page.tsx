@@ -47,7 +47,7 @@ export default function Home() {
   useEffect(() => {
     const getUserPins = async () => {
       if (session?.user) {
-        var q = query(collection(db, "pins"), where("email", "!=", user.email));
+        var q = query(collection(db, "pins"), where("email", "==", user.email));
       } else {
         var q = query(collection(db, "pins"));
       }
