@@ -16,6 +16,7 @@ import {
 } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { BsArrowLeftCircle } from "react-icons/bs";
 
 type userType = {
   email: string;
@@ -46,7 +47,7 @@ function Form() {
 
   const [title, setTitle] = useState<string>();
   const [desc, setDesc] = useState<string>();
-  const [link, setLink] = useState<string>();
+  const [link, setLink] = useState<string>("#");
   const [file, setFile] = useState<File | null | undefined>();
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -101,7 +102,14 @@ function Form() {
 
   return (
     <div className=" bg-[#efefef] p-16 rounded-2xl justify-center flex flex-col items-center">
-      <div className="flex justify-end mb-6 w-full">
+      <div className="flex justify-between mb-6 w-full">
+        <button
+          type="button"
+          // className="h-fit flex hover:bg-secondary justify-center text-4xl items-center w-fit text-white rounded-full border-r border-gray-100 mx-[2rem]"
+          className="text-white w-fit h-fit font-semibold text-5xl hover:bg-secondary rounded-full"
+          onClick={() => router.back()}>
+          <BsArrowLeftCircle color="#3F2305" />
+        </button>
         <button
           onClick={() => onSave()}
           className=" p-2
@@ -127,14 +135,14 @@ function Form() {
           <div className="w-[100%]">
             <input
               type="text"
-              placeholder="Add your title"
+              placeholder="Add your title *required"
               onChange={(e) => handletTitleChange(e)}
               className="text-[35px] outline-none font-bold w-full
         border-b-[2px] border-gray-400 bg-transparent placeholder-quadnary"
             />
             <textarea
               onChange={(e) => handleDescChange(e)}
-              placeholder="Tell everyone what your pin is about"
+              placeholder="Tell everyone what your pin is about *required"
               className="outline-none  w-full mt-[90px]
               border-b-[2px] border-gray-400 bg-transparent placeholder-quadnary"
             />

@@ -2,9 +2,7 @@ import React, { useEffect } from "react";
 
 import PinBuilderForm from "../../../components/PinBuilderForm";
 import Head from "next/head";
-// export const metadata = {
-//   title: "Pin Builder",
-// };
+
 function PinBuilder() {
   return (
     <div

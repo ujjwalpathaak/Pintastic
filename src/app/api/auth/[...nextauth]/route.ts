@@ -14,7 +14,7 @@ const handler = NextAuth({
   ],
   secret: "b89e8467f9d3367efe95200435b66229",
   pages: {
-    signIn: "/auth/signin", // Set the path to your custom login page
+    signIn: "/auth/signin",
   },
 });
 
