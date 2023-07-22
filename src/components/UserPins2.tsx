@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import PinItem from "./PinItem";
+import PinItem2 from "./PinItem2";
 import { pinType } from "../types";
 
 interface UserPinsProps {
@@ -13,9 +13,9 @@ function UserPins({ listOfPins }: UserPinsProps) {
     <div
       className="columns-2 md:columns-3
      lg:columns-4 mb-4
-     xl:columns-5 space-y-6 mx-6 ">
+     xl:columns-5 space-y-6 mx-6">
       {listOfPins?.map((item, index) => (
-        <PinItem
+        <PinItem2
           key={index}
           id={index}
           pin={item}

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import app from "../../../database/firebaseConfig";
 import UserInfo from "../../../components/UserInfo";
-import UserPins from "../../../components/UserPins";
+import UserPins2 from "../../../components/UserPins2";
 import {
   collection,
   doc,
@@ -12,51 +12,18 @@ import {
   getDoc,
   where,
 } from "firebase/firestore";
-import { useSession } from "next-auth/react";
-import Head from "next/head";
-import { useRouter } from "next/navigation";
+import useStore from "../../../store";
+import { pinType, providerProps, userInfo } from "../../../types";
 
-// export const metadata = {
-//   title: "Profile",
-// };
-
-interface providerProps {
-  params: {
-    userId: string;
-  };
-}
-type userInfo = {
-  email: string;
-  userName: string;
-  userImage: string;
-};
-type pinType = {
-  title: string;
-  desc: string;
-  link: string;
-  image: string;
-  userName: string;
-  email: string;
-  userImage: string;
-  id: string;
-};
-type userType = {
-  email: string;
-  userName: string;
-  userImage: string;
-};
 const page = (props: providerProps) => {
-  const { data: session } = useSession();
   const [userInfo, setUserInfo] = useState<userInfo | null>(null);
   const db = getFirestore(app);
 
-  const router = useRouter();
+  const { user, isLoggedIn } = useStore();
 
   const [listOfPins, setListOfPins] = useState<pinType[] | undefined>(
     undefined
   );
-
-  let user = session?.user as userType;
 
   useEffect(() => {
     document.title = "Profile | Pintastic";
@@ -64,7 +31,7 @@ const page = (props: providerProps) => {
     const getUserPins = async () => {
       const q = query(
         collection(db, "pins"),
-        where("email", "==", props.params.userId.replace("%40", '@') as string)
+        where("email", "==", user?.email as string)
       );
 
       const querySnapshot = await getDocs(q);
@@ -76,12 +43,8 @@ const page = (props: providerProps) => {
       setListOfPins(pins);
     };
 
-    getUserPins();
-  }, [user]);
-
-  useEffect(() => {
-    const getUserInfo = async (email: string) => {
-      const docRef = doc(db, "user", email);
+    const getUserInfo = async () => {
+      const docRef = doc(db, "user", user?.email as string);
       const docSnap = await getDoc(docRef);
 
       let userInfo = docSnap.data() as userInfo;
@@ -93,19 +56,22 @@ const page = (props: providerProps) => {
       }
     };
 
-    if (props.params) {
-      getUserInfo(props.params.userId.replace("%40", "@"));
+    if (isLoggedIn) {
+      getUserPins();
+      getUserInfo();
     }
-  }, [props.params]);
+  }, [user]);
 
   return (
     <>
       <div>
         {userInfo ? (
           <div>
-            <UserInfo guest={session ? false : true} userInfo={userInfo} />
-
-            <UserPins listOfPins={listOfPins} />
+            <UserInfo />
+            <h1 className="mb-4 text-3xl mx-6 font-extrabold text-quadnary md:text-4xl lg:text-5xl">
+              My Pins!
+            </h1>
+            <UserPins2 listOfPins={listOfPins} />
           </div>
         ) : (
           <></>

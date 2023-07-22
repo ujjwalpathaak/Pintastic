@@ -36,7 +36,7 @@ const page = () => {
   const provider = Object.values(providers)[0];
 
   return (
-    <div className=" bg-[#edddad]">
+    <div className=" bg-quadnary">
       <div className="container h-screen flex justify-center items-center">
         <div className="p-8 bg-primary rounded-lg flex-col justify-center flex max-w-6xl pb-10">
           <div className="flex justify-center mb-4">

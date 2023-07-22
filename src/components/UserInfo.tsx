@@ -2,30 +2,14 @@ import Image from "next/image";
 import React from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import useStore from "../store";
+import { userInfo } from "../types";
 
-interface userInfo {
-  userInfo: {
-    email: string;
-    userName: string;
-    userImage: string;
-  };
-  guest: boolean;
-}
-
-type userType = {
-  email: string;
-  userName: string;
-  userImage: string;
-};
-
-function UserInfo(params: userInfo) {
+function UserInfo() {
   const router = useRouter();
   const { data: session } = useSession();
 
-  console.log(params);
-
-  let user: userType = params.userInfo;
-
+  let { user, isLoggedIn } = useStore();
   const onLogoutClick = () => {
     router.push("/homepage");
     signOut();
@@ -39,14 +23,13 @@ function UserInfo(params: userInfo) {
         .then(() => alert("URL copied to clipboard!"))
         .catch((err) => {
           console.error("Error copying to clipboard:", err);
-
         });
-    } 
+    }
   };
   return (
     <div className="flex flex-col items-center mb-6">
       <Image
-        src={user.userImage}
+        src={user?.userImage as string}
         alt="userImage"
         width={100}
         height={100}
@@ -56,10 +39,10 @@ function UserInfo(params: userInfo) {
       <h2
         className="text-[30px]
         font-semibold">
-        {user.userName}
+        {user?.userName}
       </h2>
-      <h2 className="text-gray-400">{user.email}</h2>
-      {params.guest ? (
+      <h2 className="text-gray-400">{user?.email}</h2>
+      {!isLoggedIn ? (
         <></>
       ) : (
         <div className="flex gap-4 mt-2">
@@ -69,14 +52,14 @@ function UserInfo(params: userInfo) {
             onClick={() => onShareLink()}>
             Share
           </button>
-          {session?.user?.email == user.email ? (
-            <button
-              className="text-quadnary font-bold rounded-full
+          {/* {user?.email == user2?.email ( */}
+          <button
+            className="text-quadnary font-bold rounded-full
            text-lg hover:bg-secondary p-2 px-4 h-fit"
-              onClick={() => onLogoutClick()}>
-              Logout
-            </button>
-          ) : null}
+            onClick={() => onLogoutClick()}>
+            Logout
+          </button>
+          {/* ) : null} */}
         </div>
       )}
     </div>

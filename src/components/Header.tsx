@@ -1,34 +1,47 @@
 "use client";
-//using client side rendering as we are using next-auth and useEffect
-//and it is not supported in server side rendering
 
 import Image from "next/image";
 import React, { useEffect } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
-import { doc, getFirestore, setDoc } from "firebase/firestore";
-import { HiSearch, HiBell, HiChat } from "react-icons/hi";
+import { useSession, signIn } from "next-auth/react";
+import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
+import { HiSearch } from "react-icons/hi";
 import { useRouter } from "next/navigation";
 import app from "../database/firebaseConfig";
 import { AiFillHeart } from "react-icons/ai";
+
+import useStore from "../store";
+
 function Header() {
   const { data: session } = useSession();
-
+  const { user, isLoggedIn, login, logout } = useStore();
   const router = useRouter();
   const db = getFirestore(app);
 
   useEffect(() => {
     const saveUserInfo = async () => {
       if (session?.user) {
-        await setDoc(doc(db, "user", session.user.email!), {
-          userName: session.user.name,
-          email: session.user.email,
-          userImage: session.user.image,
-        });
+        const userRef = doc(db, "user", session.user.email!);
+
+        const userSnapshot = await getDoc(userRef);
+        if (!userSnapshot.exists()) {
+          await setDoc(userRef, {
+            userName: session.user.name,
+            email: session.user.email,
+            userImage: session.user.image,
+            favPins: [],
+          });
+        }
+
+        login(
+          session?.user?.email as string,
+          session?.user?.name as string,
+          session?.user?.image as string,
+          userSnapshot?.data()?.favPins as string[]
+        );
       }
     };
 
     saveUserInfo();
-    // console.log(session?.user);
   }, [session]);
 
   const onCreateClick = () => {
@@ -47,30 +60,30 @@ function Header() {
   };
 
   return (
-    <div className="flex justify-between items-center h-[10vh] bg-primary">
-      <div className="w-1/3 flex justify-center pl-12">
+    <div className="flex w-full justify-around lg:justify-between items-center h-[10vh] bg-primary">
+      <div className="w-1/3 flex justify-center lg:pl-12">
         <Image
           src="/Logo.png"
           alt="logo"
           width={250}
           height={90}
           onClick={() => router.push("/homepage")}
-          className="p-2
+          className="lg:p-2
          cursor-pointer"
         />
       </div>
-      <div className="w-1/3 flex justify-center">
+      <div className="w-[15%] lg:w-1/3 flex justify-center">
         <div
           className="bg-[#e9e9e9] p-2 px-6
          gap-3 items-center rounded-full w-3/4 hidden md:flex">
           <HiSearch
-            className="text-2xl
+            className="text-4xl lg:text-2xl
         text-gray-500"
           />
           <input
             type="text"
             placeholder="Search"
-            className="bg-transparent outline-none w-full text-base"
+            className="bg-transparent outline-none w-full text-base hidden lg:block"
           />
         </div>
         <HiSearch
@@ -78,9 +91,9 @@ function Header() {
         text-gray-500 md:hidden"
         />
       </div>
-      <div className="w-1/3 flex justify-center items-center pr-12">
+      <div className="lg:w-1/3 w-fit max-w-full flex justify-start lg:justify-center items-center lg:pr-12">
         <button
-          className="text-quadnary font-bold rounded-full
+          className="text-quadnary font-bold hidden lg:block rounded-full
          text-lg hover:bg-secondary p-2 px-4 h-fit"
           onClick={() => router.push("/homepage")}>
           Home
@@ -102,9 +115,9 @@ function Header() {
             src={session.user.image!}
             onClick={() => router.push("/homepage/" + session?.user?.email)}
             alt="user-image"
-            width={60}
-            height={60}
-            className="hover:bg-secondary p-1
+            width={45}
+            height={45}
+            className="hover:bg-secondary
         rounded-full cursor-pointer"
           />
         ) : (

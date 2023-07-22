@@ -1,49 +1,21 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import UploadPin from "./UploadPin";
-import { useSession } from "next-auth/react";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import app from "../database/firebaseConfig";
 import { AiOutlineCloudUpload } from "react-icons/ai";
-import {
-  collection,
-  doc,
-  getDocs,
-  getFirestore,
-  query,
-  setDoc,
-  where,
-} from "firebase/firestore";
+import { doc, getFirestore, setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { BsArrowLeftCircle } from "react-icons/bs";
-
-type userType = {
-  email: string;
-  userName: string;
-  userImage: string;
-};
-type pinType = {
-  title: string;
-  desc: string;
-  link: string;
-  image: string;
-  userName: string;
-  email: string;
-  userImage: string;
-  id: string;
-};
+import useStore from "../store";
 
 function Form() {
-  const { data: session } = useSession();
-
   const router = useRouter();
   const db = getFirestore(app);
   const storage = getStorage(app);
-
+  const { user } = useStore();
   const postId = Date.now().toString();
-
-  let user = session?.user as userType;
 
   const [title, setTitle] = useState<string>();
   const [desc, setDesc] = useState<string>();
@@ -57,7 +29,9 @@ function Form() {
     uploadFile();
   };
 
-  const uploadFile = () => {
+  const uploadFile = async () => {
+    console.log(user);
+
     const storageRef = ref(storage, "pinterest/" + file?.name);
     uploadBytes(storageRef, file as Blob)
       .then((snapshot) => {
@@ -65,26 +39,25 @@ function Form() {
       })
       .then((resp) => {
         getDownloadURL(storageRef).then(async (url) => {
-          console.log("DownloadUrl", url);
+          console.log("DownloadUrl");
 
           const postData = {
             title: title,
             desc: desc,
             link: link,
-            name: file?.name,
+            name: file?.name || "undefined",
             image: url,
-            userName: session?.user?.name,
-            email: session?.user?.email,
-            userImage: session?.user?.image,
-            id: postId + session?.user?.name,
+            userName: user?.userName,
+            email: user?.email,
+            userImage: user?.userImage,
+            id: postId + user?.userName,
           };
 
           console.log(postData);
 
           await setDoc(doc(db, "pins", postId), postData).then((resp) => {
-            console.log("Saved");
             setLoading(true);
-            router.push("/homepage/" + session?.user?.email);
+            router.push("/homepage/" + user?.email);
           });
         });
       });
@@ -105,7 +78,6 @@ function Form() {
       <div className="flex justify-between mb-6 w-full">
         <button
           type="button"
-          // className="h-fit flex hover:bg-secondary justify-center text-4xl items-center w-fit text-white rounded-full border-r border-gray-100 mx-[2rem]"
           className="text-white w-fit h-fit font-semibold text-5xl hover:bg-secondary rounded-full"
           onClick={() => router.back()}>
           <BsArrowLeftCircle color="#3F2305" />

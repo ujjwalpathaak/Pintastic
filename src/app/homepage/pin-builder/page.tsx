@@ -1,8 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import PinBuilderForm from "../../../components/PinBuilderForm";
-import Head from "next/head";
-
 function PinBuilder() {
   return (
     <div
