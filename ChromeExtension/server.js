@@ -20,6 +20,7 @@ app.post('/newPin', async (req, res) => {
     }
     const postId = Date.now().toString();
     const pinRef = db.collection('pins')
+    console.log(pinRef.data());
     if (!pinRef.exists) {
         return res.sendStatus(400).json("pins does not exst")
     }
@@ -34,6 +35,7 @@ app.post('/newPin', async (req, res) => {
         name: title,
         id: postId + doc.data().name
     })
+    console.log(res2);
     res.status(200).send(res2)
 })
 
