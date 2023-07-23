@@ -2,8 +2,10 @@ const express = require('express')
 const app = express()
 const port = 5000
 const { db } = require('./config.js')
+const bodyParser = require('body-parser');
 
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', async (req, res) => {
     res.status(200).send("Working")
