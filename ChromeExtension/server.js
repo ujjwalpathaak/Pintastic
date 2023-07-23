@@ -20,7 +20,7 @@ app.post('/newPin', async (req, res) => {
     }
     const postId = Date.now().toString();
     const pinRef = db.collection('pins')
-    console.log(pinRef.data());
+    console.log(pinRef);
     if (!pinRef.exists) {
         return res.sendStatus(400).json("pins does not exst")
     }
@@ -36,7 +36,7 @@ app.post('/newPin', async (req, res) => {
         id: postId + doc.data().name
     })
     console.log(res2);
-    res.status(200).send(res2)
+    res.status(200).json(res2)
 })
 
 app.listen(port, () => console.log(`Server has started on port: ${port}`))
