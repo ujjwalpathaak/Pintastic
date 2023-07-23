@@ -5,6 +5,10 @@ const { db } = require('./config.js')
 
 app.use(express.urlencoded({ extended: true }));
 
+app.get('/', async (req, res) => {
+    res.status(200).send("Working")
+})
+
 app.post('/newPin', async (req, res) => {
     const { title, desc, image, email, } = req.body
 
