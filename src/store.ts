@@ -1,7 +1,6 @@
-// import { mountStoreDevtool } from "simple-zustand-devtools";
 import { create } from "zustand";
 
-interface AppState {
+interface userState {
   user: {
     email: string;
     userName: string;
@@ -13,7 +12,7 @@ interface AppState {
   logout: () => void;
 }
 
-const useStore = create<AppState>((set) => ({
+const useStore = create<userState>((set) => ({
   user: null,
   isLoggedIn: false,
   login: (email, name, image, pins) => {
@@ -27,6 +26,5 @@ const useStore = create<AppState>((set) => ({
   },
   logout: () => set({ user: null, isLoggedIn: false }),
 }));
-// mountStoreDevtool('Store', useStore);
 
 export default useStore;
