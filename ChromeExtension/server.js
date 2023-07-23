@@ -12,18 +12,26 @@ app.get('/', async (req, res) => {
 app.post('/newPin', async (req, res) => {
     const { title, desc, image, email, } = req.body
 
+    console.log(title, desc, image, email,);
+
     const peopleRef = db.collection('user').doc(email)
     const doc = await peopleRef.get()
+
     console.log(doc.data());
+
     if (!doc.exists) {
+        console.log("user does not exst");
         return res.sendStatus(400).json("user does not exst")
     }
+
     const postId = Date.now().toString();
     const pinRef = db.collection('pins')
-    console.log(pinRef);
+
     if (!pinRef.exists) {
+        console.log("pins does not exst");
         return res.sendStatus(400).json("pins does not exst")
     }
+
     const res2 = await pinRef.add({
         image: image,
         title: title,
@@ -35,7 +43,9 @@ app.post('/newPin', async (req, res) => {
         name: title,
         id: postId + doc.data().name
     })
+
     console.log(res2);
+
     res.status(200).json(res2)
 })
 
