@@ -27,11 +27,6 @@ app.post('/newPin', async (req, res) => {
     const postId = Date.now().toString();
     const pinRef = db.collection('pins')
 
-    if (!pinRef.exists) {
-        console.log("pins does not exst");
-        return res.sendStatus(400).json("pins does not exst")
-    }
-
     const res2 = await pinRef.add({
         image: image,
         title: title,
