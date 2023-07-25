@@ -77,9 +77,9 @@
 <!-- ABOUT THE PROJECT -->
 
 ## About The Project
-
 [![Product Name Screen Shot][product-screenshot]](https://pintastik.vercel.app/)
-
+[![Product Name Screen Shot][product-screenshot1]](https://pintastik.vercel.app/)
+[![Product Name Screen Shot][product-screenshot2]](https://pintastik.vercel.app/)
 <!--
 Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
 
@@ -272,7 +272,9 @@ Project Link: [https://github.com/github_username/repo_name](https://github.com/
 [license-url]: https://github.com/github_username/repo_name/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
-[product-screenshot]: readme/images/screenshot1.png
+[product-screenshot]: public/Untitled.png
+[product-screenshot1]: public/Untitled2.png
+[product-screenshot2]: public/Untitled3.png
 [next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [next-url]: https://nextjs.org/
 [react.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
