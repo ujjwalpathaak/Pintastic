@@ -9,7 +9,7 @@ function UserInfo() {
   const router = useRouter();
   const { data: session } = useSession();
 
-  let { user, isLoggedIn } = useStore();
+  let { user, GuestUser, isLoggedIn } = useStore();
   const onLogoutClick = () => {
     router.push("/homepage");
     signOut();
@@ -29,7 +29,7 @@ function UserInfo() {
   return (
     <div className="flex flex-col items-center mb-6">
       <Image
-        src={user?.userImage as string}
+        src={(user?.userImage as string) || (GuestUser?.userImage as string)}
         alt="userImage"
         width={100}
         height={100}
@@ -38,10 +38,11 @@ function UserInfo() {
 
       <h2
         className="text-[30px]
-        font-semibold">
-        {user?.userName}
+        font-semibold"
+      >
+        {user?.userName || GuestUser?.userName}
       </h2>
-      <h2 className="text-gray-400">{user?.email}</h2>
+      <h2 className="text-gray-400">{user?.email || GuestUser?.email}</h2>
       {!isLoggedIn ? (
         <></>
       ) : (
@@ -49,14 +50,16 @@ function UserInfo() {
           <button
             className="text-quadnary font-bold rounded-full
          text-lg hover:bg-secondary p-2 px-4 h-fit"
-            onClick={() => onShareLink()}>
+            onClick={() => onShareLink()}
+          >
             Share
           </button>
           {/* {user?.email == user2?.email ( */}
           <button
             className="text-quadnary font-bold rounded-full
            text-lg hover:bg-secondary p-2 px-4 h-fit"
-            onClick={() => onLogoutClick()}>
+            onClick={() => onLogoutClick()}
+          >
             Logout
           </button>
           {/* ) : null} */}

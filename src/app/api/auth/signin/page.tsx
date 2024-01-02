@@ -5,6 +5,7 @@ import Provider from "../../../Provider";
 import { useRouter } from "next/navigation";
 import RootLayout from "../../../layout";
 import Image from "next/image";
+import useStore from "../../../../store";
 
 interface Provider {
   id: string;
@@ -13,6 +14,7 @@ interface Provider {
 
 const page = () => {
   const { data: session } = useSession();
+  const { user, isLoggedIn, Guestlogin, logout } = useStore();
   const [providers, setProviders] = useState<Provider | null>(null);
   const router = useRouter();
 
@@ -33,6 +35,15 @@ const page = () => {
     return <></>;
   }
 
+  const signInGuest = () => {
+    Guestlogin(
+      "guest@gmail.com",
+      "guest",
+      "https://t4.ftcdn.net/jpg/05/89/93/27/360_F_589932782_vQAEAZhHnq1QCGu5ikwrYaQD0Mmurm0N.jpg"
+    );
+    router.push("/homepage");
+  };
+
   const provider = Object.values(providers)[0];
 
   return (
@@ -45,7 +56,8 @@ const page = () => {
 
           <button
             onClick={() => signIn(provider.id)}
-            className="px-4 py-2 border flex gap-2 border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150">
+            className="px-4 py-2 border flex gap-2 border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150"
+          >
             <Image
               className="w-6 h-6"
               src="https://www.svgrepo.com/show/475656/google-color.svg"
@@ -54,7 +66,7 @@ const page = () => {
               width={50}
               height={50}
             />
-            <span>Log in</span>
+            <span>Google Account</span>
           </button>
 
           <div className="flex justify-between items-center  text-quadnary font-semibold">
@@ -64,17 +76,18 @@ const page = () => {
           </div>
 
           <button
-            onClick={() => signIn(provider.id)}
-            className="px-4 py-2 border flex gap-2 border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150">
+            onClick={() => signInGuest()}
+            className="px-4 py-2 border flex gap-2 border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150"
+          >
             <Image
               className="w-6 h-6"
-              src="https://www.svgrepo.com/show/475656/google-color.svg"
+              src="https://t4.ftcdn.net/jpg/05/89/93/27/360_F_589932782_vQAEAZhHnq1QCGu5ikwrYaQD0Mmurm0N.jpg"
               loading="lazy"
               alt="google logo"
               width={50}
               height={50}
             />
-            <span>Create Account</span>
+            <span>Guest</span>
           </button>
         </div>
       </div>

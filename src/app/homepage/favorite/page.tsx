@@ -59,21 +59,32 @@ const page = () => {
   return (
     <>
       <h1 className="mb-4 text-3xl mx-6 font-extrabold text-quadnary md:text-4xl lg:text-5xl">
-      Favorites!
+        Favorites!
       </h1>
       <div
         className="columns-2 md:columns-3
      lg:columns-4 mb-4
-     xl:columns-5 space-y-6 mx-6">
-        {listOfPins?.map((item, index) => (
-          <PinItem
-            key={index}
-            id={index}
-            pin={item}
-            hover={false}
-            setHoverPin={setHoverPin}
-          />
-        ))}
+     xl:columns-5 space-y-6 mx-6"
+      >
+        {listOfPins ? (
+          <>
+            {listOfPins.map((item, index) => (
+              <PinItem
+                key={index}
+                id={index}
+                pin={item}
+                hover={false}
+                setHoverPin={setHoverPin}
+              />
+            ))}
+          </>
+        ) : (
+          <>
+            <span className="text-xl font-extrabold text-quadnary md:text-2xl lg:text-3xl">
+              Guests cannot like pins. Go login :)
+            </span>
+          </>
+        )}
       </div>
     </>
   );

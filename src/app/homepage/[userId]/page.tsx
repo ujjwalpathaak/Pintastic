@@ -19,7 +19,7 @@ const page = (props: providerProps) => {
   const [userInfo, setUserInfo] = useState<userInfo | null>(null);
   const db = getFirestore(app);
 
-  const { user, isLoggedIn } = useStore();
+  const { user, GuestUser, isLoggedIn } = useStore();
 
   const [listOfPins, setListOfPins] = useState<pinType[] | undefined>(
     undefined
@@ -31,7 +31,11 @@ const page = (props: providerProps) => {
     const getUserPins = async () => {
       const q = query(
         collection(db, "pins"),
-        where("email", "==", user?.email as string)
+        where(
+          "email",
+          "==",
+          (user?.email as string) || (GuestUser?.email as string)
+        )
       );
 
       const querySnapshot = await getDocs(q);
@@ -44,7 +48,11 @@ const page = (props: providerProps) => {
     };
 
     const getUserInfo = async () => {
-      const docRef = doc(db, "user", user?.email as string);
+      const docRef = doc(
+        db,
+        "user",
+        (user?.email as string) || (GuestUser?.email as string)
+      );
       const docSnap = await getDoc(docRef);
 
       let userInfo = docSnap.data() as userInfo;

@@ -14,7 +14,7 @@ function Form() {
   const router = useRouter();
   const db = getFirestore(app);
   const storage = getStorage(app);
-  const { user } = useStore();
+  const { user, GuestUser } = useStore();
   const postId = Date.now().toString();
 
   const [title, setTitle] = useState<string>();
@@ -30,8 +30,6 @@ function Form() {
   };
 
   const uploadFile = async () => {
-    console.log(user);
-
     const storageRef = ref(storage, "pinterest/" + file?.name);
     uploadBytes(storageRef, file as Blob)
       .then((snapshot) => {
@@ -47,10 +45,10 @@ function Form() {
             link: link,
             name: file?.name || "undefined",
             image: url,
-            userName: user?.userName,
-            email: user?.email,
-            userImage: user?.userImage,
-            id: postId + user?.userName,
+            userName: user?.userName || GuestUser?.userName,
+            email: user?.email || GuestUser?.email,
+            userImage: user?.userImage || GuestUser?.userImage,
+            id: postId + user?.userName || GuestUser?.userName,
           };
 
           console.log(postData);
@@ -79,14 +77,16 @@ function Form() {
         <button
           type="button"
           className="text-white w-fit h-fit font-semibold text-5xl hover:bg-secondary rounded-full"
-          onClick={() => router.back()}>
+          onClick={() => router.back()}
+        >
           <BsArrowLeftCircle color="#3F2305" />
         </button>
         <button
           onClick={() => onSave()}
           className=" p-2
             text-white font-semibold px-3 
-            rounded-lg text-5xl">
+            rounded-lg text-5xl"
+        >
           {loading ? (
             <Image
               src="/loading-upload.gif"

@@ -1,3 +1,4 @@
+import { log } from "console";
 import { create } from "zustand";
 
 interface userState {
@@ -7,15 +8,23 @@ interface userState {
     userImage: string;
     favPins: string[];
   } | null;
+  GuestUser: {
+    email: string;
+    userName: string;
+    userImage: string;
+  } | null;
   isLoggedIn: boolean;
   login: (email: string, name: string, image: string, pins: string[]) => void;
+  Guestlogin: (email: string, name: string, image: string) => void;
   logout: () => void;
 }
 
 const useStore = create<userState>((set) => ({
   user: null,
+  GuestUser: null,
   isLoggedIn: false,
   login: (email, name, image, pins) => {
+    console.log("email");
     const dummyUserData = {
       email: email,
       userName: name,
@@ -24,7 +33,16 @@ const useStore = create<userState>((set) => ({
     };
     set({ user: dummyUserData, isLoggedIn: true });
   },
-  logout: () => set({ user: null, isLoggedIn: false }),
+  Guestlogin: (email, name, image) => {
+    console.log("guest");
+    const dummyUserData = {
+      email: email,
+      userName: name,
+      userImage: image,
+    };
+    set({ GuestUser: dummyUserData, isLoggedIn: true });
+  },
+  logout: () => set({ user: null, GuestUser: null, isLoggedIn: false }),
 }));
 
 export default useStore;

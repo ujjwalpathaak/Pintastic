@@ -13,7 +13,7 @@ import useStore from "../store";
 
 function Header() {
   const { data: session } = useSession();
-  const { user, isLoggedIn, login, logout } = useStore();
+  const { GuestUser, isLoggedIn, login, logout } = useStore();
   const router = useRouter();
   const db = getFirestore(app);
 
@@ -45,14 +45,14 @@ function Header() {
   }, [session]);
 
   const onCreateClick = () => {
-    if (session) {
+    if (session || GuestUser) {
       router.push("/homepage/pin-builder");
     } else {
       signIn();
     }
   };
   const onFavClick = () => {
-    if (session) {
+    if (session || GuestUser) {
       router.push("/homepage/favorite");
     } else {
       signIn();
@@ -75,7 +75,8 @@ function Header() {
       <div className="w-[15%] lg:w-1/3 flex justify-center">
         <div
           className="bg-[#e9e9e9] p-2 px-6
-         gap-3 items-center rounded-full w-3/4 hidden md:flex">
+         gap-3 items-center rounded-full w-3/4 hidden md:flex"
+        >
           <HiSearch
             className="text-4xl lg:text-2xl
         text-gray-500"
@@ -95,25 +96,33 @@ function Header() {
         <button
           className="text-quadnary font-bold hidden lg:block rounded-full
          text-lg hover:bg-secondary p-2 px-4 h-fit"
-          onClick={() => router.push("/homepage")}>
+          onClick={() => router.push("/homepage")}
+        >
           Home
         </button>
         <button
           className="text-quadnary font-bold rounded-full
          text-lg hover:bg-secondary p-2 px-4 h-fit"
-          onClick={() => onCreateClick()}>
+          onClick={() => onCreateClick()}
+        >
           Create
         </button>
         <button
           className="text-quadnary font-bold rounded-full
          text-2xl hover:bg-secondary p-3 mr-1  h-fit"
-          onClick={() => onFavClick()}>
+          onClick={() => onFavClick()}
+        >
           <AiFillHeart />
         </button>
-        {session?.user ? (
+        {session?.user || GuestUser ? (
           <Image
-            src={session.user.image!}
-            onClick={() => router.push("/homepage/" + session?.user?.email)}
+            src={session?.user?.image! || GuestUser?.userImage!}
+            onClick={() =>
+              router.push(
+                "/homepage/" +
+                  `${session?.user ? session?.user?.email : GuestUser?.email}`
+              )
+            }
             alt="user-image"
             width={45}
             height={45}
@@ -124,8 +133,9 @@ function Header() {
           <button
             className="text-quadnary font-bold rounded-full
           text-lg hover:bg-secondary p-2 px-4 h-fit"
-            onClick={() => signIn()}>
-            Login
+            onClick={() => signIn()}
+          >
+            Login <span className="text-[#afafaa]">(guest account)</span>
           </button>
         )}
       </div>
