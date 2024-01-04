@@ -75,6 +75,7 @@ const page = () => {
                 pin={item}
                 hover={false}
                 setHoverPin={setHoverPin}
+                isMobile={false}
               />
             ))}
           </>
