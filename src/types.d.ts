@@ -20,3 +20,24 @@ export type pinType = {
   userImage: string;
   id: string;
 };
+
+export interface UserPinsProps {
+  listOfPins: pinType[] | undefined;
+}
+
+export type pinTypeHover = {
+  id: number;
+  pin: {
+    title: string;
+    desc: string;
+    link: string;
+    image: string;
+    userName: string;
+    email: string;
+    userImage: string;
+    id: string;
+  };
+  hover: boolean;
+  setHoverPin: (id: number) => void;
+  isMobile: boolean;
+};

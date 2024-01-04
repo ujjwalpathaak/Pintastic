@@ -1,15 +1,4 @@
-"use client";
-import {
-  collection,
-  getDocs,
-  getFirestore,
-  query,
-  where,
-} from "firebase/firestore";
-import React, { useEffect, useState } from "react";
-import app from "../../../../database/firebaseConfig";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
-import { useSession } from "next-auth/react";
+import React from "react";
 import UserTag2 from "../../../../components/UserTag2";
 import Image from "next/image";
 import { BsArrowLeftCircle } from "react-icons/bs";
@@ -17,50 +6,17 @@ import { AiOutlineCloudDownload } from "react-icons/ai";
 import { BiLinkExternal } from "react-icons/bi";
 import { useRouter } from "next/navigation";
 import { pinType } from "../../../../types";
+import { getPin, handleDownloadPin } from "../../../lib/api";
 interface providerProps {
   params: {
     pinId: string;
   };
 }
 
-const page = (props: providerProps) => {
-  const [pinId, setPinId] = useState<string>();
-  const [pin, setPin] = useState<pinType>();
-  const [imageUrl, setImageUrl] = useState<string>();
-  const db = getFirestore(app);
+const page = async (props: providerProps) => {
   const router = useRouter();
-
-  const handleDownloadPin = async () => {
-    const storage = getStorage();
-    const starsRef = ref(storage, `pinterest/${pin?.name}`);
-
-    getDownloadURL(starsRef).then((url) => {
-      setImageUrl(url);
-    });
-  };
-
-  useEffect(() => {
-    setPinId(props.params.pinId);
-
-    const getUserPins = async () => {
-      if (pinId) {
-        var q = query(
-          collection(db, "pins"),
-          where("id", "==", pinId.replace("%20", " "))
-        );
-
-        const querySnapshot = await getDocs(q);
-
-        const pins: pinType[] = [];
-        querySnapshot.forEach((doc) => {
-          pins.push(doc.data() as pinType);
-        });
-        setPin(pins[0]);
-      }
-    };
-
-    getUserPins();
-  }, [pinId]);
+  const pin: pinType | undefined = await getPin(props.params.pinId);
+  const downloadURL: string = await handleDownloadPin(pin);
 
   return (
     <>
@@ -72,7 +28,8 @@ const page = (props: providerProps) => {
                 <button
                   type="button"
                   className="h-fit flex hover:bg-secondary justify-center lg:text-4xl text-5xl items-center w-fit text-white rounded-full border-r border-gray-100 mx-[2rem]"
-                  onClick={() => router.back()}>
+                  onClick={() => router.back()}
+                >
                   <BsArrowLeftCircle color="#3F2305" />
                 </button>
               </div>
@@ -91,14 +48,15 @@ const page = (props: providerProps) => {
                   <div className="flex items-center">
                     <button
                       className="h-fit flex hover:bg-secondary justify-center text-4xl lg:text-3xl items-center w-fit text-white rounded-full border-r border-gray-100"
-                      onClick={() => window.open(pin.link)}>
+                      onClick={() => window.open(pin.link)}
+                    >
                       <BiLinkExternal color="#3F2305" />
                     </button>
                     <a
-                      href={imageUrl}
+                      href={downloadURL}
                       download="stars.jpg"
                       className="h-fit flex hover:bg-secondary justify-center text-4xl lg:text-3xl items-center w-fit text-white rounded-full border-r border-gray-100  mr-6 ml-4"
-                      onClick={handleDownloadPin}>
+                    >
                       <AiOutlineCloudDownload color="#3F2305" />
                     </a>
                     <UserTag2
@@ -119,16 +77,6 @@ const page = (props: providerProps) => {
                 <h2 className="mt-5 lg:mt-10 text-quadnary ">{pin.desc}</h2>
               </div>
             </div>
-            {/* 
-            <div className="p-16 w-full lg:w-[50%]">
-              <div>
-                <h1 className="text-5xl text-quadnary font-bold mb-10">
-                  {pin.title}
-                </h1>
-                <h2 className="mt-10 text-quadnary ">{pin.desc}</h2>
-              </div>
-            </div>
-             */}
           </div>
         </div>
       ) : null}

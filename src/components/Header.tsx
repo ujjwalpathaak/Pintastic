@@ -8,13 +8,16 @@ import { HiSearch } from "react-icons/hi";
 import { useRouter } from "next/navigation";
 import app from "../database/firebaseConfig";
 import { AiFillHeart } from "react-icons/ai";
-
+import { usePathname } from "next/navigation";
 import useStore from "../store";
+import Link from "next/link";
+import clsx from "clsx";
 
 function Header() {
   const { data: session } = useSession();
-  const { GuestUser, isLoggedIn, login, logout } = useStore();
+  const { GuestUser, login } = useStore();
   const router = useRouter();
+  const pathname = usePathname();
   const db = getFirestore(app);
 
   useEffect(() => {
@@ -43,21 +46,6 @@ function Header() {
 
     saveUserInfo();
   }, [session]);
-
-  const onCreateClick = () => {
-    if (session || GuestUser) {
-      router.push("/homepage/pin-builder");
-    } else {
-      signIn();
-    }
-  };
-  const onFavClick = () => {
-    if (session || GuestUser) {
-      router.push("/homepage/favorite");
-    } else {
-      signIn();
-    }
-  };
 
   return (
     <div className="flex w-full justify-around lg:justify-between items-center h-[10vh] bg-primary">
@@ -93,42 +81,56 @@ function Header() {
         />
       </div>
       <div className="lg:w-1/3 w-fit max-w-full flex justify-start lg:justify-center items-center lg:pr-12">
-        <button
-          className="text-quadnary font-bold hidden lg:block rounded-full
-         text-lg hover:bg-secondary p-2 px-4 h-fit"
-          onClick={() => router.push("/homepage")}
+        <Link
+          className={clsx(
+            "text-quadnary font-bold hidden lg:block rounded-full text-lg hover:bg-secondary p-2 px-4 h-fit",
+            { "bg-secondary": pathname === "/homepage" }
+          )}
+          href="/homepage"
         >
           Home
-        </button>
-        <button
-          className="text-quadnary font-bold rounded-full
-         text-lg hover:bg-secondary p-2 px-4 h-fit"
-          onClick={() => onCreateClick()}
+        </Link>
+        <Link
+          className={clsx(
+            "text-quadnary font-bold rounded-full text-lg hover:bg-secondary p-2 px-4 h-fit",
+            { "bg-secondary": pathname === "/homepage/pin-builder" }
+          )}
+          href={
+            session || GuestUser ? "/homepage/pin-builder" : "api/auth/signin"
+          }
         >
           Create
-        </button>
-        <button
-          className="text-quadnary font-bold rounded-full
-         text-2xl hover:bg-secondary p-3 mr-1  h-fit"
-          onClick={() => onFavClick()}
+        </Link>
+        <Link
+          className={clsx(
+            "text-quadnary font-bold rounded-full text-2xl hover:bg-secondary p-3 mr-1  h-fit",
+            { "bg-secondary": pathname === "/homepage/favorite" }
+          )}
+          href={session || GuestUser ? "/homepage/favorite" : "api/auth/signin"}
         >
           <AiFillHeart />
-        </button>
+        </Link>
+
         {session?.user || GuestUser ? (
-          <Image
-            src={session?.user?.image! || GuestUser?.userImage!}
-            onClick={() =>
-              router.push(
-                "/homepage/" +
-                  `${session?.user ? session?.user?.email : GuestUser?.email}`
-              )
-            }
-            alt="user-image"
-            width={45}
-            height={45}
-            className="hover:bg-secondary
+          <div className="flex items-center">
+            <span className=" mr-2 text-quadnary hover:bg-secondary p-3 font-bold rounded-full text-lg">
+              Profile
+            </span>
+            <Image
+              src={session?.user?.image! || GuestUser?.userImage!}
+              onClick={() =>
+                router.push(
+                  "/homepage/" +
+                    `${session?.user ? session?.user?.email : GuestUser?.email}`
+                )
+              }
+              alt="user-image"
+              width={45}
+              height={45}
+              className="hover:bg-secondary
         rounded-full cursor-pointer"
-          />
+            />
+          </div>
         ) : (
           <button
             className="text-quadnary font-bold rounded-full

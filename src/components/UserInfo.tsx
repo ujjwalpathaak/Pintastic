@@ -1,19 +1,17 @@
+"use client";
 import Image from "next/image";
 import React from "react";
-import { signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 import useStore from "../store";
-import { userInfo } from "../types";
+import Link from "next/link";
 
 function UserInfo() {
-  const router = useRouter();
-  const { data: session } = useSession();
-
   let { user, GuestUser, isLoggedIn } = useStore();
+
   const onLogoutClick = () => {
-    router.push("/homepage");
     signOut();
   };
+
   const onShareLink = () => {
     const currentURL = window.location.href;
 
@@ -54,15 +52,13 @@ function UserInfo() {
           >
             Share
           </button>
-          {/* {user?.email == user2?.email ( */}
-          <button
-            className="text-quadnary font-bold rounded-full
-           text-lg hover:bg-secondary p-2 px-4 h-fit"
+          <Link
+            href="/homepage"
+            className="text-quadnary font-bold rounded-full text-lg hover:bg-secondary p-2 px-4 h-fit"
             onClick={() => onLogoutClick()}
           >
             Logout
-          </button>
-          {/* ) : null} */}
+          </Link>
         </div>
       )}
     </div>

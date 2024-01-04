@@ -1,21 +1,16 @@
 "use client";
 import React, { useState } from "react";
 import UploadPin from "./UploadPin";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import app from "../database/firebaseConfig";
 import { AiOutlineCloudUpload } from "react-icons/ai";
-import { doc, getFirestore, setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { BsArrowLeftCircle } from "react-icons/bs";
 import useStore from "../store";
+import { uploadFile } from "../app/lib/api";
 
 function Form() {
   const router = useRouter();
-  const db = getFirestore(app);
-  const storage = getStorage(app);
   const { user, GuestUser } = useStore();
-  const postId = Date.now().toString();
 
   const [title, setTitle] = useState<string>();
   const [desc, setDesc] = useState<string>();
@@ -24,41 +19,10 @@ function Form() {
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const onSave = () => {
+  const onSave = async () => {
     setLoading(true);
-    uploadFile();
-  };
-
-  const uploadFile = async () => {
-    const storageRef = ref(storage, "pinterest/" + file?.name);
-    uploadBytes(storageRef, file as Blob)
-      .then((snapshot) => {
-        console.log("File Uploaded");
-      })
-      .then((resp) => {
-        getDownloadURL(storageRef).then(async (url) => {
-          console.log("DownloadUrl");
-
-          const postData = {
-            title: title,
-            desc: desc,
-            link: link,
-            name: file?.name || "undefined",
-            image: url,
-            userName: user?.userName || GuestUser?.userName,
-            email: user?.email || GuestUser?.email,
-            userImage: user?.userImage || GuestUser?.userImage,
-            id: postId + user?.userName || GuestUser?.userName,
-          };
-
-          console.log(postData);
-
-          await setDoc(doc(db, "pins", postId), postData).then((resp) => {
-            setLoading(true);
-            router.push("/homepage/" + user?.email);
-          });
-        });
-      });
+    await uploadFile(user, GuestUser, title, desc, link, file, setLoading);
+    router.push("/homepage/" + user?.email);
   };
 
   const handleLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {

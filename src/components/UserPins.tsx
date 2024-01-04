@@ -1,19 +1,32 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PinItem from "./PinItem";
-import { pinType } from "../types";
-
-interface UserPinsProps {
-  listOfPins: pinType[] | undefined;
-}
+import { UserPinsProps } from "../types";
 
 function UserPins({ listOfPins }: UserPinsProps) {
   const [hoverPin, setHoverPin] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  const checkIsMobile = () => {
+    setIsMobile(window.innerWidth < 768);
+  };
+
+  useEffect(() => {
+    checkIsMobile();
+
+    window.addEventListener("resize", checkIsMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkIsMobile);
+    };
+  }, []);
+
   return (
     <div
       className="columns-2 md:columns-3
      lg:columns-4 mb-4
-     xl:columns-5 space-y-6 mx-6 ">
+     xl:columns-5 space-y-6 mx-6 "
+    >
       {listOfPins?.map((item, index) => (
         <PinItem
           key={index}
@@ -21,6 +34,7 @@ function UserPins({ listOfPins }: UserPinsProps) {
           pin={item}
           hover={index === hoverPin}
           setHoverPin={setHoverPin}
+          isMobile={isMobile}
         />
       ))}
     </div>
