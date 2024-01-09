@@ -53,7 +53,7 @@ function UserInfo() {
             Share
           </button>
           <Link
-            href="/homepage"
+            href="/"
             className="text-quadnary font-bold rounded-full text-lg hover:bg-secondary p-2 px-4 h-fit"
             onClick={() => onLogoutClick()}
           >

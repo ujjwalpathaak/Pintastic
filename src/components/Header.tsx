@@ -113,9 +113,14 @@ function Header() {
 
         {session?.user || GuestUser ? (
           <div className="flex items-center">
-            <span className=" mr-2 text-quadnary hover:bg-secondary p-3 font-bold rounded-full text-lg">
+            <Link
+              href={`/homepage/${
+                session?.user ? session?.user?.email : GuestUser?.email
+              }`}
+              className=" mr-2 text-quadnary hover:bg-secondary p-3 font-bold rounded-full text-lg"
+            >
               Profile
-            </span>
+            </Link>
             <Image
               src={session?.user?.image! || GuestUser?.userImage!}
               onClick={() =>

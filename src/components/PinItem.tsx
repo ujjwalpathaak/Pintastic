@@ -21,7 +21,7 @@ function PinItem({ id, pin, hover, setHoverPin, isMobile }: pinTypeHover) {
     <>
       {isMobile ? (
         <div
-          className="z-30 "
+          className="z-30"
           onClick={() => router.push(`/homepage/pin/${pin.id}`)}
           onMouseEnter={() => setHoverPin(id)}
           onMouseLeave={() => setHoverPin(-1)}
@@ -70,7 +70,7 @@ function PinItem({ id, pin, hover, setHoverPin, isMobile }: pinTypeHover) {
         </div>
       ) : (
         <div
-          className="z-30 "
+          className="z-30 cursor-pointer"
           onClick={() => router.push(`/homepage/pin/${pin.id}`)}
           onMouseEnter={() => setHoverPin(id)}
           onMouseLeave={() => setHoverPin(-1)}

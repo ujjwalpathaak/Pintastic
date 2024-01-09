@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import UserTag2 from "../../../../components/UserTag2";
 import Image from "next/image";
