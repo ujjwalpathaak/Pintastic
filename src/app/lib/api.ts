@@ -31,6 +31,8 @@ export const getUserPins = async () => {
   querySnapshot.forEach((doc) => {
     pins.push(doc.data() as pinType);
   });
+  console.log(pins.length);
+  
 
   for (let i = pins.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -106,6 +108,8 @@ export const uploadFile = async (
     })
     .then((resp) => {
       getDownloadURL(storageRef).then(async (url) => {
+        let _id = Date.now().toString();
+        let userName = user?.userName || GuestUser?.userName;
         console.log("DownloadUrl");
 
         const postData = {
@@ -114,14 +118,14 @@ export const uploadFile = async (
           link: link,
           name: file?.name || "undefined",
           image: url,
-          userName: user?.userName || GuestUser?.userName,
+          userName: userName,
           email: user?.email || GuestUser?.email,
           userImage: user?.userImage || GuestUser?.userImage,
-          id: Date.now().toString() + user?.userName || GuestUser?.userName,
+          id: _id + userName,
         };
         console.log(postData);
 
-        await setDoc(doc(db, "pins", Date.now().toString()), postData).then(
+        await setDoc(doc(db, "pins", _id), postData).then(
           (resp) => {
             setLoading(true);
           }
@@ -146,17 +150,6 @@ export const getPin = async (pinId: string) => {
     return pins[0];
   }
 };
-
-// export const handleDownloadPin = async (pin: pinType) => {
-//   const storage = getStorage();
-//   console.log(pin?.name);
-//   const starsRef = ref(storage, `pinterest/${pin?.name}`);
-
-//   getDownloadURL(starsRef).then((url) => {
-//     return url;
-//   });
-//   return "";
-// };
 
 export const getUserPins2 = async (
   user: {

@@ -66,7 +66,7 @@ const page = () => {
      lg:columns-4 mb-4
      xl:columns-5 space-y-6 mx-6"
       >
-        {listOfPins ? (
+        {listOfPins && session?.user ? (
           <>
             {listOfPins.map((item, index) => (
               <PinItem
