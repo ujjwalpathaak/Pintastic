@@ -27,7 +27,7 @@ const page = () => {
       if (session?.user) {
         var q = query(
           collection(db, "user"),
-          where("email", "==", session?.user?.email)
+          where("email", "==", session?.user?.email!)
         );
 
         const querySnapshot = await getDocs(q);
@@ -39,7 +39,7 @@ const page = () => {
         for (let i = 0; i < favPinId.length; i++) {
           const q = query(
             collection(db, "pins"),
-            where("id", "==", favPinId[i])
+            where("id", "==", favPinId[i]!)
           );
 
           const querySnapshot2 = await getDocs(q);

@@ -1,5 +1,6 @@
 import {
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -11,8 +12,15 @@ import {
 } from "firebase/firestore";
 import { pinType, userInfo } from "../../types";
 import app from "../../database/firebaseConfig";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 import { SetStateAction } from "react";
+import { log } from "console";
 const storage = getStorage(app);
 const db = getFirestore(app);
 
@@ -90,6 +98,7 @@ export const uploadFile = async (
   file: File | null | undefined,
   setLoading: { (value: SetStateAction<boolean>): void; (arg0: boolean): void }
 ) => {
+  console.log(file?.name);
   const storageRef = ref(storage, "pinterest/" + file?.name);
   uploadBytes(storageRef, file as Blob)
     .then((snapshot) => {
@@ -125,7 +134,7 @@ export const getPin = async (pinId: string) => {
   if (pinId) {
     var q = query(
       collection(db, "pins"),
-      where("id", "==", pinId.replace("%20", " "))
+      where("id", "==", pinId!.replace("%20", " "))
     );
 
     const querySnapshot = await getDocs(q);
@@ -138,15 +147,16 @@ export const getPin = async (pinId: string) => {
   }
 };
 
-export const handleDownloadPin = async (pin: pinType | undefined) => {
-  const storage = getStorage();
-  const starsRef = ref(storage, `pinterest/${pin?.name}`);
+// export const handleDownloadPin = async (pin: pinType) => {
+//   const storage = getStorage();
+//   console.log(pin?.name);
+//   const starsRef = ref(storage, `pinterest/${pin?.name}`);
 
-  getDownloadURL(starsRef).then((url) => {
-    return url;
-  });
-  return "";
-};
+//   getDownloadURL(starsRef).then((url) => {
+//     return url;
+//   });
+//   return "";
+// };
 
 export const getUserPins2 = async (
   user: {
@@ -202,4 +212,29 @@ export const getUserInfo = async (
   let userInfo = docSnap.data() as userInfo;
 
   return userInfo;
+};
+
+export const deletePin = async (pin: {
+  title: string;
+  desc: string;
+  name: string;
+  link: string;
+  image: string;
+  userName: string;
+  email: string;
+  userImage: string;
+  id: string;
+}) => {
+  try {
+    console.log(pin);
+    let _id = pin.id.match(/(\d+)/);
+    let __id = _id![0];
+    console.log(__id);
+
+    await deleteDoc(doc(db, "pins", __id)).then(() => {
+      console.log(`Document with ID '${__id}' deleted successfully.`);
+    });
+  } catch (error) {
+    console.error("Error deleting pin:", error);
+  }
 };

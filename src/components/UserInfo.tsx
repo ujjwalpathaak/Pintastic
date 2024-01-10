@@ -8,22 +8,6 @@ import Link from "next/link";
 function UserInfo() {
   let { user, GuestUser, isLoggedIn } = useStore();
 
-  const onLogoutClick = () => {
-    signOut();
-  };
-
-  const onShareLink = () => {
-    const currentURL = window.location.href;
-
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard
-        .writeText(currentURL)
-        .then(() => alert("URL copied to clipboard!"))
-        .catch((err) => {
-          console.error("Error copying to clipboard:", err);
-        });
-    }
-  };
   return (
     <div className="flex flex-col items-center mb-6">
       <Image
@@ -45,17 +29,10 @@ function UserInfo() {
         <></>
       ) : (
         <div className="flex gap-4 mt-2">
-          <button
-            className="text-quadnary font-bold rounded-full
-         text-lg hover:bg-secondary p-2 px-4 h-fit"
-            onClick={() => onShareLink()}
-          >
-            Share
-          </button>
           <Link
             href="/"
             className="text-quadnary font-bold rounded-full text-lg hover:bg-secondary p-2 px-4 h-fit"
-            onClick={() => onLogoutClick()}
+            onClick={() => signOut()}
           >
             Logout
           </Link>

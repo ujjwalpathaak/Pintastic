@@ -1,23 +1,21 @@
-"use client"
+"use client";
 import React from "react";
 import UserTag2 from "../../../../components/UserTag2";
 import Image from "next/image";
 import { BsArrowLeftCircle } from "react-icons/bs";
 import { AiOutlineCloudDownload } from "react-icons/ai";
 import { BiLinkExternal } from "react-icons/bi";
-import { useRouter } from "next/navigation";
 import { pinType } from "../../../../types";
-import { getPin, handleDownloadPin } from "../../../lib/api";
+import { getPin } from "../../../lib/api";
+import Link from "next/link";
 interface providerProps {
   params: {
     pinId: string;
   };
 }
 
-const page = async (props: providerProps) => {
-  const router = useRouter();
-  const pin: pinType | undefined = await getPin(props.params.pinId);
-  const downloadURL: string = await handleDownloadPin(pin);
+const page = async (props: providerProps) => {  
+  const pin: pinType | undefined = await getPin(props?.params?.pinId);
 
   return (
     <>
@@ -26,13 +24,13 @@ const page = async (props: providerProps) => {
           <div className="bg-[#efefef] h-full flex lg:flex-row flex-col rounded-2xl py-2 lg:py-[2rem] xl:pd-16">
             <div className="w-full lg:w-1/2 flex lg:flex-row lg:h-auto h-full flex-col justify-between">
               <div>
-                <button
+                <Link
                   type="button"
+                  href={`/homepage`}
                   className="h-fit flex hover:bg-secondary justify-center lg:text-4xl text-5xl items-center w-fit text-white rounded-full border-r border-gray-100 mx-[2rem]"
-                  onClick={() => router.back()}
                 >
                   <BsArrowLeftCircle color="#3F2305" />
-                </button>
+                </Link>
               </div>
               <div className="flex justify-end h-full items-center w-full flex-col">
                 <div className="max-h-[100%] max-w-[100%] w-full h-full relative">
@@ -53,13 +51,6 @@ const page = async (props: providerProps) => {
                     >
                       <BiLinkExternal color="#3F2305" />
                     </button>
-                    <a
-                      href={downloadURL}
-                      download="stars.jpg"
-                      className="h-fit flex hover:bg-secondary justify-center text-4xl lg:text-3xl items-center w-fit text-white rounded-full border-r border-gray-100  mr-6 ml-4"
-                    >
-                      <AiOutlineCloudDownload color="#3F2305" />
-                    </a>
                     <UserTag2
                       user={{
                         name: pin.userName,

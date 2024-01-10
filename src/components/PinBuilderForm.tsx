@@ -23,6 +23,7 @@ function Form() {
     setLoading(true);
     await uploadFile(user, GuestUser, title, desc, link, file, setLoading);
     router.push("/homepage/" + user?.email);
+    router.refresh()
   };
 
   const handleLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {

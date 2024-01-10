@@ -12,8 +12,8 @@ function UserPins() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const pins = await getUserPins2(user, GuestUser);
-        setListOfPins(pins);
+        const pins = await getUserPins2(user, GuestUser);        
+        setListOfPins(pins!);
       } catch (error) {
         console.error("Error fetching user pins:", error);
       }
