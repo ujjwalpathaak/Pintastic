@@ -2,9 +2,14 @@ import React, { useEffect, useState } from "react";
 import PinItem from "../../../components/PinItem";
 import { getFavPins } from "../../lib/api";
 import { pinType } from "../../../types";
+import { Session } from "next-auth";
 
-const ClientComponent = ({ session }) => {
-  const [favPins, setFavPins] = useState([]);
+interface ClientComponentProps {
+  session: Session | null;
+}
+
+const ClientComponent: React.FC<ClientComponentProps> = ({ session }) => {
+  const [favPins, setFavPins] = useState<pinType[]>([]);
 
   useEffect(() => {
     if (session?.user) {
