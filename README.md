@@ -1,32 +1,4 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-
 <a name="readme-top"></a>
-
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
-
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
-
-<!-- [![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url] -->
-
-<!-- PROJECT LOGO -->
 <br />
 <div align="center">
   <a href="https://github.com/github_username/repo_name">
@@ -36,78 +8,31 @@
 <!-- <h3 align="center">interviewlabs</h3> -->
 <br>
   <p align="justify">
-    Using NextJS and TypeScript to allow users to add, like and save pins. Implemented NextAuth.js along with Zustand for user authentication. Leveraged Firebase to manage the database and storage requirements. Built a Chrome Extension  to seamlessly add content from other websites.
-    <br />
-    <!-- <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a> -->
-    <br />
-    <!-- <br /> -->
-    <a href="https://pintastik.vercel.app/">View Demo</a>
-    <!-- <a href="https://github.com/github_username/repo_name/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/github_username/repo_name/issues">Request Feature</a> -->
-  </p>
+    Using NextJS and TypeScript to allow users to add, like and save pins. Implemented NextAuth.js along with Zustand for user authentication. Leveraged Firebase to manage the database and storage requirements. Built a Chrome Extension  to seamlessly add content from other websites.</p>
+    <img alt="Sockets" src="https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=nextdotjs&logoColor=white"/> <img alt="Nodejs" src="https://img.shields.io/badge/Firebase-red?style=for-the-badge&logo=firebase&logoColor=white"/> <img alt="Sockets" src="https://img.shields.io/badge/Typescript-blue?style=for-the-badge&logo=typescript&logoColor=black"/> <img alt="Sockets" src="https://img.shields.io/badge/Tailwind-rgb(56,189,248)?style=for-the-badge&logo=tailwindcss&logoColor=white"/> <img alt="Sockets" src="https://img.shields.io/badge/Zustand-purple?style=for-the-badge&logo=zustand&logoColor=white"/> <img alt="Sockets" src="https://img.shields.io/badge/Chrome Extension-red?style=for-the-badge&logo=googlechrome&logoColor=white"/>
+<h3>Go to <a href="https://pintastik.vercel.app/">Pintastic.com</a> or see <a href="https://interviewlabs.netlify.app/">Demo Video</a></h3>
 </div>
 
-<!-- TABLE OF CONTENTS -->
-<!-- <details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details> -->
+## Screenshots
+### Login Screen
+### New Meeting Screen
+### Meeting Screen
 
-<!-- ABOUT THE PROJECT -->
+## Technical Implementation
 
-## About The Project
-[![Product Name Screen Shot][product-screenshot]](https://pintastik.vercel.app/)
-[![Product Name Screen Shot][product-screenshot1]](https://pintastik.vercel.app/)
-[![Product Name Screen Shot][product-screenshot2]](https://pintastik.vercel.app/)
-<!--
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
+### Frontend Development
+- **Next.js**: Leveraged for its robust framework to create a highly optimized and scalable web application.
+- **TypeScript**: Employed to enhance code quality and maintainability by providing type safety.
+- **NextAuth.js**: Implemented for secure and efficient authentication, ensuring a seamless user login experience.
+- **Zustand**: Utilized for state management to maintain a predictable and centralized state across the application.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p> -->
+### Backend Development
+- **Firebase**: Deployed as the backend service to handle database and storage needs, offering high reliability and scalability. Firebase’s real-time database ensures quick data synchronization, and its cloud storage provides secure and efficient file management.
 
-### Built With
-
-<!-- - [![Next][next.js]][next-url] -->
-- <img alt="Sockets" src="https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=nextdotjs&logoColor=white"/>
-- <img alt="Nodejs" src="https://img.shields.io/badge/Firebase-red?style=for-the-badge&logo=firebase&logoColor=white"/>
-- <img alt="Sockets" src="https://img.shields.io/badge/Typescript-blue?style=for-the-badge&logo=typescript&logoColor=black"/>
-- <img alt="Sockets" src="https://img.shields.io/badge/Tailwind-rgb(56,189,248)?style=for-the-badge&logo=tailwindcss&logoColor=white"/>
-- <img alt="Sockets" src="https://img.shields.io/badge/Zustand-purple?style=for-the-badge&logo=zustand&logoColor=white"/>
-- <img alt="Sockets" src="https://img.shields.io/badge/Chrome Extension-red?style=for-the-badge&logo=googlechrome&logoColor=white"/>
-<!-- - [![Vue][vue.js]][vue-url]
-- [![Angular][angular.io]][angular-url]
-- [![Svelte][svelte.dev]][svelte-url]
-- [![Laravel][laravel.com]][laravel-url]
-- [![Bootstrap][bootstrap.com]][bootstrap-url]
-- [![JQuery][jquery.com]][jquery-url] -->
-
-<!-- <p align="right">(<a href="#readme-top">back to top</a>)</p> -->
-
-<!-- GETTING STARTED -->
+### Browser Extension
+- **Chrome Extension:**: Developed a Chrome extension to facilitate seamless pin posting from external websites. This integration boosts user engagement by 50% by allowing users to interact with the application directly from their browser, improving accessibility and user interaction.
 
 ## Getting Started
-
-<!-- This is an example of how you may give instructions on setting up your project locally. -->
 
 To get a local copy up and running follow these simple example steps.
 
