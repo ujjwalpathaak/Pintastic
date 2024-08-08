@@ -1,3 +1,5 @@
+// components/ClientComponent.tsx
+
 import React, { useEffect, useState } from "react";
 import PinItem from "../../../components/PinItem";
 import { getFavPins } from "../../lib/api";
@@ -14,8 +16,20 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ session }) => {
   useEffect(() => {
     if (session?.user) {
       const fetchFavPins = async () => {
-        const pins = await getFavPins(session.user);
-        setFavPins(pins);
+        try {
+          const pins = await getFavPins({
+            email: session?.user?.email || "",
+            userName: session?.user?.name || "",
+            userImage: session?.user?.image || "",
+            favPins: [],
+          });
+          const filteredPins = pins.filter(
+            (pin) => pin !== undefined
+          ) as pinType[];
+          setFavPins(filteredPins);
+        } catch (error) {
+          console.error("Failed to fetch favorite pins:", error);
+        }
       };
       fetchFavPins();
     }

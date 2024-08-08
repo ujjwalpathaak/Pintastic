@@ -64,19 +64,21 @@ const resizeImage = (
       ctx.filter = "blur(10px)"; // Adjust the blur radius as needed
       ctx.drawImage(canvas, 0, 0, width, height);
 
-      canvas.toBlob(resolve, file.type);
+      canvas.toBlob((blob) => {
+        if (blob) resolve(blob);
+      }, file.type);
     };
 
     reader.readAsDataURL(file);
   });
 };
 
-export const getGenrePins = async (genre: string): Promise<pinType[]> => {
+export const getGenrePins = async (genre: string) => {
   const q = query(collection(db, "tags"), where("id", "==", genre));
 
   const querySnapshot = await getDocs(q);
 
-  const pinPromises: Promise<pinType>[] = [];
+  const pinPromises: Promise<pinType | undefined>[] = [];
 
   // Process each document
   querySnapshot.forEach((doc) => {
@@ -87,7 +89,7 @@ export const getGenrePins = async (genre: string): Promise<pinType[]> => {
       return [];
     }
     images.forEach((imageId: string) => {
-      pinPromises.push(getPin(imageId));
+      return pinPromises.push(getPin(imageId));
     });
   });
 
@@ -105,6 +107,9 @@ export const getFavPins = async (
     favPins: string[];
   } | null
 ) => {
+  if (!user || !user.email) {
+    throw new Error("User or user email is not defined");
+  }
   const userDocRef = doc(db, "user", user?.email);
   const userSnapshot = await getDoc(userDocRef);
   const userData = userSnapshot.data();
@@ -112,7 +117,7 @@ export const getFavPins = async (
   const favPinId = userData?.favPins;
   if (!favPinId || favPinId.length === 0) return [];
 
-  const pinPromises: Promise<pinType>[] = [];
+  const pinPromises: Promise<pinType | undefined>[] = [];
 
   favPinId.forEach((id: string) => {
     pinPromises.push(getPin(id));
@@ -261,7 +266,7 @@ export const uploadFile = async (
     });
 };
 
-export const getPin = async (pinId: string) => {
+export const getPin = async (pinId: string): Promise<pinType | undefined> => {
   if (pinId) {
     var q = query(
       collection(db, "pins"),
@@ -276,6 +281,7 @@ export const getPin = async (pinId: string) => {
     });
     return pins[0];
   }
+  return undefined;
 };
 
 export const getUserPins2 = async (

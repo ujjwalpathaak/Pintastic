@@ -4,7 +4,7 @@ import UploadPin from "./UploadPin";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Select from "react-select";
+import Select, { MultiValue, ActionMeta } from "react-select";
 import makeAnimated from "react-select/animated";
 import { BsArrowLeftCircle } from "react-icons/bs";
 import useStore from "../store";
@@ -12,7 +12,12 @@ import { uploadFile } from "../app/lib/api";
 
 const animatedComponents = makeAnimated();
 
-const options = [
+interface OptionType {
+  value: string;
+  label: string;
+}
+
+const options: OptionType[] = [
   { value: "cars", label: "Cars" },
   { value: "anime", label: "Anime" },
   { value: "games", label: "Games" },
@@ -26,13 +31,13 @@ const options = [
 ];
 
 const customStyles = {
-  control: (provided) => ({
+  control: (provided: any) => ({
     ...provided,
     minWidth: "300px",
     backgroundColor: "#EFEFEF",
     margin: "10px 0",
   }),
-  option: (provided, state) => ({
+  option: (provided: any, state: any) => ({
     ...provided,
     backgroundColor: "#EFEFEF",
     color: "black",
@@ -42,11 +47,20 @@ const customStyles = {
 function Form() {
   const router = useRouter();
   const { user, GuestUser } = useStore();
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState<
+    MultiValue<OptionType>
+  >([]);
 
-  const handleChange = (selected: React.SetStateAction<never[]>) => {
+  const handleChange = (
+    selected: MultiValue<OptionType>,
+    actionMeta: ActionMeta<OptionType>
+  ) => {
     setSelectedOptions(selected);
   };
+
+  useEffect(() => {
+    console.log(selectedOptions);
+  }, [selectedOptions]);
 
   const [title, setTitle] = useState<string>("");
   const [desc, setDesc] = useState<string>("");
@@ -86,7 +100,7 @@ function Form() {
   };
 
   return (
-    <div className=" bg-[#efefef] p-16 rounded-2xl justify-center flex flex-col items-center">
+    <div className="bg-[#efefef] p-16 rounded-2xl justify-center flex flex-col items-center">
       <div className="flex justify-between mb-6 w-full">
         <button
           type="button"
@@ -97,9 +111,7 @@ function Form() {
         </button>
         <button
           onClick={() => onSave()}
-          className=" p-2
-            text-white font-semibold px-3 
-            rounded-lg text-5xl"
+          className="p-2 text-white font-semibold px-3 rounded-lg text-5xl"
         >
           {loading ? (
             <Image
@@ -124,21 +136,18 @@ function Form() {
               required
               placeholder="Add your title"
               onChange={(e) => handleTitleChange(e)}
-              className="text-[35px] outline-none font-bold w-full
-        border-b-[2px] border-gray-400 bg-transparent placeholder-quadnary"
+              className="text-[35px] outline-none font-bold w-full border-b-[2px] border-gray-400 bg-transparent placeholder-quadnary"
             />
             <textarea
               onChange={(e) => handleDescChange(e)}
               placeholder="Tell everyone what your pin is about"
-              className="outline-none  w-full mt-[90px]
-              border-b-[2px] border-gray-400 bg-transparent placeholder-quadnary"
+              className="outline-none w-full mt-[90px] border-b-[2px] border-gray-400 bg-transparent placeholder-quadnary"
             />
             <input
               type="text"
               onChange={(e) => handleLinkChange(e)}
               placeholder="Add a Destination Link"
-              className=" outline-none  w-full  pb-4 mt-[90px]
-        border-b-[2px] border-gray-400 bg-transparent placeholder-quadnary"
+              className="outline-none w-full pb-4 mt-[90px] border-b-[2px] border-gray-400 bg-transparent placeholder-quadnary"
             />
             <Select
               styles={customStyles}

@@ -23,11 +23,7 @@ const Page = async ({ params }: { params: { pinId: string } }) => {
   const pin = await fetchPin(params.pinId);
 
   // Server-side data fetching logic
-  return (
-    <div>
-      <ClientComponent pin={pin} />
-    </div>
-  );
+  return <div>{pin && <ClientComponent pin={pin} />}</div>;
 };
 
 export default Page;

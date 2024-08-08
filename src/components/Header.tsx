@@ -33,9 +33,11 @@ function Header() {
   const pathname = usePathname();
   const db = getFirestore(app);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredOptions, setFilteredOptions] = useState([]);
+  const [filteredOptions, setFilteredOptions] = useState<
+    { value: string; label: string }[]
+  >([]);
 
-  const handleSearchChange = (event) => {
+  const handleSearchChange = (event: { target: { value: any } }) => {
     const value = event.target.value;
     setSearchTerm(value);
     if (value) {
@@ -54,7 +56,7 @@ function Header() {
     setFilteredOptions([]);
   };
 
-  const handleOptionClick = (option) => {
+  const handleOptionClick = (option: { value: any; label?: string }) => {
     setSearchTerm(option.value);
     setFilteredOptions([]);
   };

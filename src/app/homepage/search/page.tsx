@@ -3,16 +3,17 @@ import HomepagePins from "../../../components/HomepagePins";
 import { getGenrePins } from "../../lib/api";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { pinType } from "../../../types";
 
 export default function Home() {
-  const [listOfPins, setListOfPins] = useState([]);
+  const [listOfPins, setListOfPins] = useState<pinType[]>([]);
   const searchParams = useSearchParams();
   const genre = searchParams.get("genre");
 
   useEffect(() => {
     const fetchPins = async () => {
       if (genre) {
-        const pins = await getGenrePins(genre);
+        const pins = (await getGenrePins(genre)) as pinType[];
         setListOfPins(pins);
       }
     };
