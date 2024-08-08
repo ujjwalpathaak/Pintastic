@@ -3,13 +3,16 @@ export interface providerProps {
     userId: string;
   };
 }
+
 export type userInfo = {
   email: string;
   userName: string;
   userImage: string;
   favPins: [];
 };
+
 export type pinType = {
+  lowResImage: string | StaticImport;
   title: string;
   desc: string;
   name: string;
@@ -28,6 +31,7 @@ export interface UserPinsProps {
 export type pinTypeHover = {
   id: number;
   pin: {
+    lowResImage: string | StaticImport;
     title: string;
     desc: string;
     link: string;

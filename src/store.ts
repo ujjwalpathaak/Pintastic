@@ -24,7 +24,6 @@ const useStore = create<userState>((set) => ({
   GuestUser: null,
   isLoggedIn: false,
   login: (email, name, image, pins) => {
-    console.log("email");
     const dummyUserData = {
       email: email,
       userName: name,
@@ -34,7 +33,6 @@ const useStore = create<userState>((set) => ({
     set({ user: dummyUserData, isLoggedIn: true });
   },
   Guestlogin: (email, name, image) => {
-    console.log("guest");
     const dummyUserData = {
       email: email,
       userName: name,

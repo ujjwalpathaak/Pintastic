@@ -3,7 +3,6 @@ const handleAddPin = () => {
     const title = document.getElementById("title").value;
     const imageURL = document.getElementById("imageURL").value;
     const email = document.getElementById("email").value;
-    console.log(description, title, imageURL);
 
     chrome.runtime.sendMessage({
         command: 'post', data: {
@@ -12,11 +11,7 @@ const handleAddPin = () => {
             image: imageURL,
             email: email
         }
-    }, (response) => {
-        console.log(response);
-    }
-    );
-
+    });
 }
 
 

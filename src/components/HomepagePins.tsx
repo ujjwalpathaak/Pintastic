@@ -3,13 +3,11 @@ import React, { useEffect, useState } from "react";
 import PinItem from "./PinItem";
 import { UserPinsProps } from "../types";
 
-function UserPins({ listOfPins }: UserPinsProps) {
+function HomepagePins({ listOfPins }: UserPinsProps) {
   const [hoverPin, setHoverPin] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
-  const checkIsMobile = () => {
-    setIsMobile(window.innerWidth < 768);
-  };
+  const checkIsMobile = () => setIsMobile(window.innerWidth < 768);
 
   useEffect(() => {
     checkIsMobile();
@@ -41,4 +39,4 @@ function UserPins({ listOfPins }: UserPinsProps) {
   );
 }
 
-export default UserPins;
+export default HomepagePins;

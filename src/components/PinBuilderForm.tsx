@@ -1,29 +1,78 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import UploadPin from "./UploadPin";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
 import { BsArrowLeftCircle } from "react-icons/bs";
 import useStore from "../store";
 import { uploadFile } from "../app/lib/api";
 
+const animatedComponents = makeAnimated();
+
+const options = [
+  { value: "cars", label: "Cars" },
+  { value: "anime", label: "Anime" },
+  { value: "games", label: "Games" },
+  { value: "travel", label: "Travel" },
+  { value: "food", label: "Food" },
+  { value: "quotes", label: "Quotes" },
+  { value: "movies", label: "Movies" },
+  { value: "technology", label: "Technology" },
+  { value: "nature", label: "Nature" },
+  { value: "animals", label: "Animals" },
+];
+
+const customStyles = {
+  control: (provided) => ({
+    ...provided,
+    minWidth: "300px",
+    backgroundColor: "#EFEFEF",
+    margin: "10px 0",
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    backgroundColor: "#EFEFEF",
+    color: "black",
+  }),
+};
+
 function Form() {
   const router = useRouter();
   const { user, GuestUser } = useStore();
+  const [selectedOptions, setSelectedOptions] = useState([]);
 
-  const [title, setTitle] = useState<string>();
-  const [desc, setDesc] = useState<string>();
+  const handleChange = (selected: React.SetStateAction<never[]>) => {
+    setSelectedOptions(selected);
+  };
+
+  const [title, setTitle] = useState<string>("");
+  const [desc, setDesc] = useState<string>("");
   const [link, setLink] = useState<string>("#");
   const [file, setFile] = useState<File | null | undefined>();
 
   const [loading, setLoading] = useState<boolean>(false);
 
   const onSave = async () => {
+    if (!title || !desc) {
+      alert("Title and description are required!");
+      return;
+    }
     setLoading(true);
-    await uploadFile(user, GuestUser, title, desc, link, file, setLoading);
+    await uploadFile(
+      user,
+      GuestUser,
+      title,
+      desc,
+      link,
+      file,
+      setLoading,
+      selectedOptions
+    );
     router.push("/homepage/" + user?.email);
-    router.refresh()
+    router.refresh();
   };
 
   const handleLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,7 +81,7 @@ function Form() {
   const handleDescChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDesc(e.target.value);
   };
-  const handletTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
 
@@ -72,14 +121,15 @@ function Form() {
           <div className="w-[100%]">
             <input
               type="text"
-              placeholder="Add your title *required"
-              onChange={(e) => handletTitleChange(e)}
+              required
+              placeholder="Add your title"
+              onChange={(e) => handleTitleChange(e)}
               className="text-[35px] outline-none font-bold w-full
         border-b-[2px] border-gray-400 bg-transparent placeholder-quadnary"
             />
             <textarea
               onChange={(e) => handleDescChange(e)}
-              placeholder="Tell everyone what your pin is about *required"
+              placeholder="Tell everyone what your pin is about"
               className="outline-none  w-full mt-[90px]
               border-b-[2px] border-gray-400 bg-transparent placeholder-quadnary"
             />
@@ -89,6 +139,16 @@ function Form() {
               placeholder="Add a Destination Link"
               className=" outline-none  w-full  pb-4 mt-[90px]
         border-b-[2px] border-gray-400 bg-transparent placeholder-quadnary"
+            />
+            <Select
+              styles={customStyles}
+              className="mt-10"
+              closeMenuOnSelect={false}
+              placeholder="Select Genre"
+              components={animatedComponents}
+              onChange={handleChange}
+              isMulti
+              options={options}
             />
           </div>
         </div>

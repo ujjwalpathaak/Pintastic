@@ -1,12 +1,8 @@
-import UserPins from "../../components/UserPins";
+import HomepagePins from "../../components/HomepagePins";
 import { getUserPins } from "../../app/lib/api";
 
 export default async function Home() {
   const listOfPins = await getUserPins();
 
-  return (
-    <div className="">
-      <UserPins listOfPins={listOfPins} />
-    </div>
-  );
+  return <HomepagePins listOfPins={listOfPins} />;
 }

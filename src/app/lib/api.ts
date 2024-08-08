@@ -24,6 +24,105 @@ import { log } from "console";
 const storage = getStorage(app);
 const db = getFirestore(app);
 
+const resizeImage = (
+  file: File,
+  maxWidth: number,
+  maxHeight: number
+): Promise<Blob> => {
+  return new Promise((resolve) => {
+    const img = document.createElement("img");
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      img.src = reader.result as string;
+    };
+
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d")!;
+      let width = img.width;
+      let height = img.height;
+
+      // Resize logic
+      if (width > maxWidth) {
+        height *= maxWidth / width;
+        width = maxWidth;
+      }
+
+      if (height > maxHeight) {
+        width *= maxHeight / height;
+        height = maxHeight;
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+
+      // Draw image
+      ctx.drawImage(img, 0, 0, width, height);
+
+      // Apply blur effect
+      ctx.filter = "blur(10px)"; // Adjust the blur radius as needed
+      ctx.drawImage(canvas, 0, 0, width, height);
+
+      canvas.toBlob(resolve, file.type);
+    };
+
+    reader.readAsDataURL(file);
+  });
+};
+
+export const getGenrePins = async (genre: string): Promise<pinType[]> => {
+  const q = query(collection(db, "tags"), where("id", "==", genre));
+
+  const querySnapshot = await getDocs(q);
+
+  const pinPromises: Promise<pinType>[] = [];
+
+  // Process each document
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
+    const images = data.images || [];
+    // Map each image ID to a promise
+    if (images.size === 0) {
+      return [];
+    }
+    images.forEach((imageId: string) => {
+      pinPromises.push(getPin(imageId));
+    });
+  });
+
+  // Wait for all promises to resolve
+  const pins = await Promise.all(pinPromises);
+
+  return pins;
+};
+
+export const getFavPins = async (
+  user: {
+    email: string;
+    userName: string;
+    userImage: string;
+    favPins: string[];
+  } | null
+) => {
+  const userDocRef = doc(db, "user", user?.email);
+  const userSnapshot = await getDoc(userDocRef);
+  const userData = userSnapshot.data();
+
+  const favPinId = userData?.favPins;
+  if (!favPinId || favPinId.length === 0) return [];
+
+  const pinPromises: Promise<pinType>[] = [];
+
+  favPinId.forEach((id: string) => {
+    pinPromises.push(getPin(id));
+  });
+
+  const pins = await Promise.all(pinPromises);
+
+  return pins;
+};
+
 export const getUserPins = async () => {
   var q = query(collection(db, "pins"));
   const querySnapshot = await getDocs(q);
@@ -31,8 +130,6 @@ export const getUserPins = async () => {
   querySnapshot.forEach((doc) => {
     pins.push(doc.data() as pinType);
   });
-  console.log(pins.length);
-  
 
   for (let i = pins.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -61,7 +158,6 @@ export const handleFavClick = async (
   },
   isLoggedIn: boolean
 ) => {
-  console.log(pin?.email, pin?.id);
   if (isLoggedIn) {
     let email = user?.email as string;
     const db = getFirestore(app);
@@ -98,39 +194,70 @@ export const uploadFile = async (
   desc: string | undefined,
   link: string | undefined,
   file: File | null | undefined,
-  setLoading: { (value: SetStateAction<boolean>): void; (arg0: boolean): void }
+  setLoading: { (value: SetStateAction<boolean>): void; (arg0: boolean): void },
+  selectedOptions: any
 ) => {
-  console.log(file?.name);
-  const storageRef = ref(storage, "pinterest/" + file?.name);
-  uploadBytes(storageRef, file as Blob)
-    .then((snapshot) => {
-      console.log("File Uploaded");
+  if (!file) return;
+
+  const storageRef = ref(storage, "pinterest/" + file.name);
+
+  // Upload the high-res image
+  uploadBytes(storageRef, file)
+    .then(() => {
+      return getDownloadURL(storageRef);
     })
-    .then((resp) => {
-      getDownloadURL(storageRef).then(async (url) => {
-        let _id = Date.now().toString();
-        let userName = user?.userName || GuestUser?.userName;
-        console.log("DownloadUrl");
+    .then(async (url) => {
+      // Resize the image
+      const lowResBlob = await resizeImage(file, 400, 400); // Adjust size as needed
+      const lowResRef = ref(storage, "low_resolution/" + file.name);
 
-        const postData = {
-          title: title,
-          desc: desc,
-          link: link,
-          name: file?.name || "undefined",
-          image: url,
-          userName: userName,
-          email: user?.email || GuestUser?.email,
-          userImage: user?.userImage || GuestUser?.userImage,
-          id: _id + userName,
-        };
-        console.log(postData);
+      // Upload the low-res image
+      await uploadBytes(lowResRef, lowResBlob);
 
-        await setDoc(doc(db, "pins", _id), postData).then(
-          (resp) => {
-            setLoading(true);
-          }
-        );
-      });
+      const lowResUrl = await getDownloadURL(lowResRef);
+      let _id = Date.now().toString();
+      let userName = user?.userName || GuestUser?.userName;
+
+      const postData = {
+        title: title,
+        desc: desc,
+        link: link,
+        name: file.name || "undefined",
+        image: url,
+        lowResImage: lowResUrl,
+        userName: userName,
+        email: user?.email || GuestUser?.email,
+        userImage: user?.userImage || GuestUser?.userImage,
+        id: _id + userName,
+      };
+
+      await setDoc(doc(db, "pins", _id), postData);
+      setLoading(true);
+      return postData;
+    })
+    .then(async (postData) => {
+      for (let i = 0; i < selectedOptions.length; i++) {
+        const genre = selectedOptions[i].value;
+
+        // Create a query to find documents with the specified genre
+        const q = query(collection(db, "tags"), where("id", "==", genre));
+        const querySnapshot = await getDocs(q);
+
+        // Iterate over each document in the query snapshot
+        for (const docSnap of querySnapshot.docs) {
+          const docRef = docSnap.ref; // Document reference
+          const docData = docSnap.data(); // Document data
+
+          // Add the new image to the existing images array
+          const ids = [...(docData.images || []), postData.id];
+
+          // Update the document with the new images array
+          await updateDoc(docRef, { images: ids });
+        }
+      }
+    })
+    .catch((error) => {
+      console.error("Error uploading file:", error);
     });
 };
 
@@ -219,14 +346,10 @@ export const deletePin = async (pin: {
   id: string;
 }) => {
   try {
-    console.log(pin);
     let _id = pin.id.match(/(\d+)/);
     let __id = _id![0];
-    console.log(__id);
 
-    await deleteDoc(doc(db, "pins", __id)).then(() => {
-      console.log(`Document with ID '${__id}' deleted successfully.`);
-    });
+    await deleteDoc(doc(db, "pins", __id));
   } catch (error) {
     console.error("Error deleting pin:", error);
   }

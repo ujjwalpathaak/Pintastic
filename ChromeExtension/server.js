@@ -14,15 +14,10 @@ app.get('/', async (req, res) => {
 app.post('/newPin', async (req, res) => {
     const { title, desc, image, email, } = req.body
 
-    console.log(title, desc, image, email,);
-
     const peopleRef = db.collection('user').doc(email)
     const doc = await peopleRef.get()
 
-    console.log(doc.data());
-
     if (!doc.exists) {
-        console.log("user does not exst");
         return res.sendStatus(400).json("user does not exst")
     }
 
@@ -40,8 +35,6 @@ app.post('/newPin', async (req, res) => {
         name: title,
         id: postId + doc.data().name
     })
-
-    console.log(res2);
 
     res.status(200).json(res2)
 })

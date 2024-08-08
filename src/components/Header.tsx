@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 import { HiSearch } from "react-icons/hi";
@@ -13,12 +13,51 @@ import useStore from "../store";
 import Link from "next/link";
 import clsx from "clsx";
 
+const options = [
+  { value: "cars", label: "Cars" },
+  { value: "anime", label: "Anime" },
+  { value: "games", label: "Games" },
+  { value: "travel", label: "Travel" },
+  { value: "food", label: "Food" },
+  { value: "quotes", label: "Quotes" },
+  { value: "movies", label: "Movies" },
+  { value: "technology", label: "Technology" },
+  { value: "nature", label: "Nature" },
+  { value: "animals", label: "Animals" },
+];
+
 function Header() {
   const { data: session } = useSession();
   const { GuestUser, login } = useStore();
   const router = useRouter();
   const pathname = usePathname();
   const db = getFirestore(app);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredOptions, setFilteredOptions] = useState([]);
+
+  const handleSearchChange = (event) => {
+    const value = event.target.value;
+    setSearchTerm(value);
+    if (value) {
+      const filtered = options.filter((option) =>
+        option.label.toLowerCase().includes(value.toLowerCase())
+      );
+      setFilteredOptions(filtered.slice(0, 5)); // Show only the first 5 results
+    } else {
+      setFilteredOptions([]);
+    }
+  };
+
+  const handleSearch = () => {
+    router.push(`/homepage/search?genre=${searchTerm}`);
+    setSearchTerm("");
+    setFilteredOptions([]);
+  };
+
+  const handleOptionClick = (option) => {
+    setSearchTerm(option.value);
+    setFilteredOptions([]);
+  };
 
   useEffect(() => {
     const saveUserInfo = async () => {
@@ -52,35 +91,44 @@ function Header() {
       <div className="w-1/3 flex justify-center lg:pl-12">
         <Image
           src="/Logo.png"
+          priority
           alt="logo"
           width={250}
           height={90}
           onClick={() => router.push("/homepage")}
-          className="lg:p-2
-         cursor-pointer"
+          className="lg:p-2 cursor-pointer"
         />
       </div>
-      <div className="w-[15%] lg:w-1/3 flex justify-center">
-        <div
-          className="bg-[#e9e9e9] p-2 px-6
-         gap-3 items-center rounded-full w-3/4 hidden md:flex"
-        >
-          <HiSearch
-            className="text-4xl lg:text-2xl
-        text-gray-500"
-          />
+      <div className="w-[15%] lg:w-1/3 flex justify-center relative">
+        <div className="relative bg-[#e9e9e9] p-2 px-6 gap-3 items-center rounded-full w-3/4 hidden md:flex">
+          <HiSearch className="text-4xl lg:text-2xl text-gray-500" />
           <input
             type="text"
-            placeholder="Search"
+            placeholder="Type keyword"
+            value={searchTerm}
+            onChange={handleSearchChange}
             className="bg-transparent outline-none w-full text-base hidden lg:block"
           />
+          <button className="text-sm" onClick={handleSearch}>
+            search
+          </button>
+          {filteredOptions.length > 0 && (
+            <div className="absolute top-12 left-0 right-0 bg-primary w-full border border-gray-300 rounded-md shadow-lg z-20">
+              {filteredOptions.map((option) => (
+                <div
+                  key={option.value}
+                  className="p-2 cursor-pointer hover:bg-gray-200"
+                  onClick={() => handleOptionClick(option)}
+                >
+                  {option.label}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-        <HiSearch
-          className="text-[25px] 
-        text-gray-500 md:hidden"
-        />
+        <HiSearch className="text-[25px] text-gray-500 md:hidden" />
       </div>
-      <div className="lg:w-1/3 w-fit max-w-full flex justify-start lg:justify-center items-center lg:pr-12">
+      <div className="lg:w-1/3 w-fit max-w-full flex justify-start lg:justify-center gap-2 items-center lg:pr-12">
         <Link
           className={clsx(
             "text-quadnary font-bold hidden lg:block rounded-full text-lg hover:bg-secondary p-2 px-4 h-fit",
@@ -95,9 +143,7 @@ function Header() {
             "text-quadnary font-bold rounded-full text-lg hover:bg-secondary p-2 px-4 h-fit",
             { "bg-secondary": pathname === "/homepage/pin-builder" }
           )}
-          href={
-            session || GuestUser ? "/homepage/pin-builder" : "api/auth/signin"
-          }
+          href={session || GuestUser ? "/homepage/pin-builder" : "/"}
         >
           Create
         </Link>
@@ -106,7 +152,7 @@ function Header() {
             "text-quadnary font-bold rounded-full text-2xl hover:bg-secondary p-3 mr-1  h-fit",
             { "bg-secondary": pathname === "/homepage/favorite" }
           )}
-          href={session || GuestUser ? "/homepage/favorite" : "api/auth/signin"}
+          href={session || GuestUser ? "/homepage/favorite" : "/"}
         >
           <AiFillHeart />
         </Link>
@@ -132,15 +178,13 @@ function Header() {
               alt="user-image"
               width={45}
               height={45}
-              className="hover:bg-secondary
-        rounded-full cursor-pointer"
+              className="hover:bg-secondary rounded-full cursor-pointer"
             />
           </div>
         ) : (
           <button
-            className="text-quadnary font-bold rounded-full
-          text-lg hover:bg-secondary p-2 px-4 h-fit"
-            onClick={() => signIn()}
+            className="text-quadnary font-bold rounded-full text-lg hover:bg-secondary p-2 px-4 h-fit"
+            onClick={() => router.push("/")}
           >
             Login <span className="text-[#afafaa]">(guest account)</span>
           </button>

@@ -51,7 +51,7 @@ const page = () => {
       <div className="container h-screen flex justify-center items-center">
         <div className="p-8 bg-primary rounded-lg flex-col justify-center flex max-w-6xl pb-10">
           <div className="flex justify-center mb-4">
-            <Image src="/Logo.png" width={400} height={150} alt="login-photo" />
+            <Image src="/Logo.png" priority width={400} height={150} alt="login-photo" />
           </div>
 
           <button

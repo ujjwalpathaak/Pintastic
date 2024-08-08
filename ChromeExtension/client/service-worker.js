@@ -7,8 +7,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         formData.append('image', request.data.image);
         formData.append('email', request.data.email);
 
-        // console.log(JSON.stringify(formData))
-
         fetch('https://pintastic-extension.onrender.com/newPin', {
             method: 'POST',
             headers: {
@@ -18,7 +16,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         })
             .then(response => response.json())
             .then(data => {
-                console.log(data);
             })
             .catch(error => {
                 console.error('Error making API call:', error);
