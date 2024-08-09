@@ -1,4 +1,3 @@
-import { log } from "console";
 import { create } from "zustand";
 
 interface userState {

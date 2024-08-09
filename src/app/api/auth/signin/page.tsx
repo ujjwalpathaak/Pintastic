@@ -1,9 +1,8 @@
 "use client";
-import { getProviders, signIn, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import Provider from "../../../Provider";
 import { useRouter } from "next/navigation";
-import RootLayout from "../../../layout";
 import Image from "next/image";
 import useStore from "../../../../store";
 
@@ -14,7 +13,7 @@ interface Provider {
 
 const page = () => {
   const { data: session } = useSession();
-  const { user, isLoggedIn, Guestlogin, logout } = useStore();
+  const { Guestlogin } = useStore();
   const [providers, setProviders] = useState<Provider | null>(null);
   const router = useRouter();
 
@@ -51,7 +50,13 @@ const page = () => {
       <div className="container h-screen flex justify-center items-center">
         <div className="p-8 bg-primary rounded-lg flex-col justify-center flex max-w-6xl pb-10">
           <div className="flex justify-center mb-4">
-            <Image src="/Logo.png" priority width={400} height={150} alt="login-photo" />
+            <Image
+              src="/Logo.png"
+              priority
+              width={400}
+              height={150}
+              alt="login-photo"
+            />
           </div>
 
           <button

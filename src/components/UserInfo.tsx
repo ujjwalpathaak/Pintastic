@@ -32,7 +32,7 @@ function UserInfo() {
           <Link
             href="/"
             className="text-quadnary font-bold rounded-full text-lg hover:bg-secondary p-2 px-4 h-fit"
-            onClick={() => signOut({callbackUrl: '/', redirect:true})}
+            onClick={() => signOut({ callbackUrl: "/", redirect: true })}
           >
             Logout
           </Link>

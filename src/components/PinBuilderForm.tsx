@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import UploadPin from "./UploadPin";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import { useRouter } from "next/navigation";
@@ -58,10 +58,6 @@ function Form() {
     setSelectedOptions(selected);
   };
 
-  useEffect(() => {
-    console.log(selectedOptions);
-  }, [selectedOptions]);
-
   const [title, setTitle] = useState<string>("");
   const [desc, setDesc] = useState<string>("");
   const [link, setLink] = useState<string>("#");
@@ -75,6 +71,8 @@ function Form() {
       return;
     }
     setLoading(true);
+    console.log("selectedOptions:", selectedOptions);
+    console.log("sentAPI call");
     await uploadFile(
       user,
       GuestUser,
@@ -85,6 +83,7 @@ function Form() {
       setLoading,
       selectedOptions
     );
+    console.log("waiting for response");
     router.push("/homepage/" + user?.email);
     router.refresh();
   };

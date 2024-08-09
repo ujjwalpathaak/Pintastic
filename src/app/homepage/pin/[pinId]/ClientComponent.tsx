@@ -1,4 +1,3 @@
-// src/app/homepage/pin/[pinId]/ClientComponent.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";

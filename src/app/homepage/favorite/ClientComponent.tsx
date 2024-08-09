@@ -1,5 +1,3 @@
-// components/ClientComponent.tsx
-
 import React, { useEffect, useState } from "react";
 import PinItem from "../../../components/PinItem";
 import { getFavPins } from "../../lib/api";

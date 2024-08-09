@@ -2,11 +2,10 @@
 import Image from "next/image";
 import React, { useRef } from "react";
 import { useRouter } from "next/navigation";
-import UserTag from "./UserTag";
 import { AiFillDelete } from "react-icons/ai";
 import "firebase/firestore";
-import { useSession } from "next-auth/react";
 import { deletePin } from "../app/lib/api";
+import useStore from "../store";
 
 type pinType = {
   id: number;
@@ -20,24 +19,22 @@ type pinType = {
     userImage: string;
     id: string;
   };
-  hover: boolean;
-  setHoverPin: (id: number) => void;
 };
 
-function PinItem({ id, pin, hover, setHoverPin }: pinType) {
+function PinItem({ pin }: pinType) {
   const router = useRouter();
-  const { data: session } = useSession();
-  const userTag = {
-    name: pin?.userName,
-    image: pin?.userImage,
-  };
+  const { user } = useStore();
+
   const imageRef = useRef<HTMLImageElement | null>(null);
-  const handleDeletePin = (pin: any) => {
-    deletePin(pin);
-    router.refresh();
-  };
-  const handleClick = () => {
-    router.push(`/homepage/pin/${pin.id}`);
+
+  const handleDeletePin = async (pin: any) => {
+    try {
+      const result = await deletePin(pin);
+      console.log("Pin deleted: ", result);
+      console.log("user?.email: ", user?.email);
+    } catch (error) {
+      console.error("Error deleting pin: ", error);
+    }
   };
 
   return (
@@ -52,7 +49,11 @@ function PinItem({ id, pin, hover, setHoverPin }: pinType) {
       />
       <button
         type="button"
-        onClick={() => handleDeletePin(pin)}
+        onClick={async () => {
+          await handleDeletePin(pin);
+          console.log("Reload page");
+          router.push("/homepage");
+        }}
         className="text-black absolute bottom-2 left-2 p-1 z-30 rounded-full hover:text-black border border-black hover:bg-slate-200 bg-white focus:ring-4 focus:outline-none focus:ring-white font-medium text-base text-center"
       >
         <AiFillDelete />

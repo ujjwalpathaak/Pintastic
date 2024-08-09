@@ -1,3 +1,4 @@
+"use client";
 import HomepagePins from "../../components/HomepagePins";
 import { getUserPins } from "../../app/lib/api";
 

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { useSession, signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 import { HiSearch } from "react-icons/hi";
 import { useRouter } from "next/navigation";
@@ -90,7 +90,7 @@ function Header() {
 
   return (
     <div className="flex w-full justify-around lg:justify-between items-center h-[10vh] bg-primary">
-      <div className="w-1/3 flex justify-center lg:pl-12">
+      <div className=" w-1/4 sm:w-1/3 flex justify-center lg:pl-12">
         <Image
           src="/Logo.png"
           priority
@@ -98,22 +98,29 @@ function Header() {
           width={250}
           height={90}
           onClick={() => router.push("/homepage")}
-          className="lg:p-2 cursor-pointer"
+          className="p-0 lg:p-2 cursor-pointer"
         />
       </div>
-      <div className="w-[15%] lg:w-1/3 flex justify-center relative">
-        <div className="relative bg-[#e9e9e9] p-2 px-6 gap-3 items-center rounded-full w-3/4 hidden md:flex">
-          <HiSearch className="text-4xl lg:text-2xl text-gray-500" />
+      <div className="w-[50%] sm:w-[15%] lg:w-1/3 flex justify-center relative">
+        <div className="relative bg-[#e9e9e9] sm:p-2 p-1 sm:px-6 gap-3 items-center rounded-full w-3/4 flex">
+          <HiSearch className="hidden md:block text-4xl lg:text-2xl text-gray-500" />
           <input
             type="text"
-            placeholder="Type keyword"
+            // placeholder="Type keyword"
             value={searchTerm}
             onChange={handleSearchChange}
-            className="bg-transparent outline-none w-full text-base hidden lg:block"
+            className="bg-transparent outline-none w-full text-xs md:text-base block"
           />
-          <button className="text-sm" onClick={handleSearch}>
+          <button
+            className="hidden md:block text-xs md:text-sm"
+            onClick={handleSearch}
+          >
             search
           </button>
+          <HiSearch
+            onClick={handleSearch}
+            className="md:hidden block text-2xl sm:text-4xl lg:text-2xl text-gray-500"
+          />
           {filteredOptions.length > 0 && (
             <div className="absolute top-12 left-0 right-0 bg-primary w-full border border-gray-300 rounded-md shadow-lg z-20">
               {filteredOptions.map((option) => (
@@ -128,9 +135,8 @@ function Header() {
             </div>
           )}
         </div>
-        <HiSearch className="text-[25px] text-gray-500 md:hidden" />
       </div>
-      <div className="lg:w-1/3 w-fit max-w-full flex justify-start lg:justify-center gap-2 items-center lg:pr-12">
+      <div className="lg:w-1/3 w-fit max-w-full flex justify-start lg:justify-center items-center lg:pr-12">
         <Link
           className={clsx(
             "text-quadnary font-bold hidden lg:block rounded-full text-lg hover:bg-secondary p-2 px-4 h-fit",
@@ -142,7 +148,7 @@ function Header() {
         </Link>
         <Link
           className={clsx(
-            "text-quadnary font-bold rounded-full text-lg hover:bg-secondary p-2 px-4 h-fit",
+            "text-quadnary font-bold rounded-full text-xs sm:text-lg hover:bg-secondary p-1 sm:p-2 px-2 sm:px-4 h-fit",
             { "bg-secondary": pathname === "/homepage/pin-builder" }
           )}
           href={session || GuestUser ? "/homepage/pin-builder" : "/"}
@@ -151,7 +157,7 @@ function Header() {
         </Link>
         <Link
           className={clsx(
-            "text-quadnary font-bold rounded-full text-2xl hover:bg-secondary p-3 mr-1  h-fit",
+            "text-quadnary font-bold rounded-full text-base sm:text-2xl hover:bg-secondary p-3 mr-1  h-1/2 sm:h-fit",
             { "bg-secondary": pathname === "/homepage/favorite" }
           )}
           href={session || GuestUser ? "/homepage/favorite" : "/"}
@@ -165,7 +171,7 @@ function Header() {
               href={`/homepage/${
                 session?.user ? session?.user?.email : GuestUser?.email
               }`}
-              className=" mr-2 text-quadnary hover:bg-secondary p-3 font-bold rounded-full text-lg"
+              className=" mr-2 text-quadnary hover:bg-secondary p-1 sm:p-3 font-bold rounded-full text-xs sm:text-lg"
             >
               Profile
             </Link>
@@ -185,10 +191,13 @@ function Header() {
           </div>
         ) : (
           <button
-            className="text-quadnary font-bold rounded-full text-lg hover:bg-secondary p-2 px-4 h-fit"
+            className="text-quadnary font-bold rounded-full text-xs sm:text-lg hover:bg-secondary p-1 sm:p-2 px-2 sm:px-4 h-fit"
             onClick={() => router.push("/")}
           >
-            Login <span className="text-[#afafaa]">(guest account)</span>
+            Login{" "}
+            <span className="text-[#afafaa] hidden sm:block">
+              (guest account)
+            </span>
           </button>
         )}
       </div>

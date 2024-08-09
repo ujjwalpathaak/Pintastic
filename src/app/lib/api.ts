@@ -12,15 +12,9 @@ import {
 } from "firebase/firestore";
 import { pinType, userInfo } from "../../types";
 import app from "../../database/firebaseConfig";
-import {
-  deleteObject,
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytes,
-} from "firebase/storage";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { SetStateAction } from "react";
-import { log } from "console";
+
 const storage = getStorage(app);
 const db = getFirestore(app);
 
@@ -43,7 +37,6 @@ const resizeImage = (
       let width = img.width;
       let height = img.height;
 
-      // Resize logic
       if (width > maxWidth) {
         height *= maxWidth / width;
         width = maxWidth;
@@ -57,11 +50,9 @@ const resizeImage = (
       canvas.width = width;
       canvas.height = height;
 
-      // Draw image
       ctx.drawImage(img, 0, 0, width, height);
 
-      // Apply blur effect
-      ctx.filter = "blur(10px)"; // Adjust the blur radius as needed
+      ctx.filter = "blur(10px)";
       ctx.drawImage(canvas, 0, 0, width, height);
 
       canvas.toBlob((blob) => {
@@ -74,17 +65,17 @@ const resizeImage = (
 };
 
 export const getGenrePins = async (genre: string) => {
-  const q = query(collection(db, "tags"), where("id", "==", genre));
+  console.log("getGenrePins - genre: ", genre);
+  const q = query(collection(db, "tags"), where("id", "==", genre || ""));
 
   const querySnapshot = await getDocs(q);
 
   const pinPromises: Promise<pinType | undefined>[] = [];
 
-  // Process each document
   querySnapshot.forEach((doc) => {
     const data = doc.data();
     const images = data.images || [];
-    // Map each image ID to a promise
+
     if (images.size === 0) {
       return [];
     }
@@ -93,7 +84,6 @@ export const getGenrePins = async (genre: string) => {
     });
   });
 
-  // Wait for all promises to resolve
   const pins = await Promise.all(pinPromises);
 
   return pins;
@@ -131,8 +121,10 @@ export const getFavPins = async (
 export const getUserPins = async () => {
   var q = query(collection(db, "pins"));
   const querySnapshot = await getDocs(q);
+  console.log("getUserPins", querySnapshot);
   const pins: pinType[] = [];
   querySnapshot.forEach((doc) => {
+    console.log("getUserPins", doc.data());
     pins.push(doc.data() as pinType);
   });
 
@@ -202,21 +194,23 @@ export const uploadFile = async (
   setLoading: { (value: SetStateAction<boolean>): void; (arg0: boolean): void },
   selectedOptions: any
 ) => {
-  if (!file) return;
+  if (!file) {
+    console.log("No file selected");
+    return;
+  }
 
   const storageRef = ref(storage, "pinterest/" + file.name);
+  console.log("storageRef:", storageRef);
 
-  // Upload the high-res image
-  uploadBytes(storageRef, file)
+  await uploadBytes(storageRef, file)
     .then(() => {
+      console.log("File uploaded successfully");
       return getDownloadURL(storageRef);
     })
     .then(async (url) => {
-      // Resize the image
-      const lowResBlob = await resizeImage(file, 400, 400); // Adjust size as needed
+      const lowResBlob = await resizeImage(file, 400, 400);
       const lowResRef = ref(storage, "low_resolution/" + file.name);
 
-      // Upload the low-res image
       await uploadBytes(lowResRef, lowResBlob);
 
       const lowResUrl = await getDownloadURL(lowResRef);
@@ -236,27 +230,27 @@ export const uploadFile = async (
         id: _id + userName,
       };
 
+      console.log("postData:", postData);
       await setDoc(doc(db, "pins", _id), postData);
       setLoading(true);
       return postData;
     })
     .then(async (postData) => {
+      console.log("postData:", postData);
       for (let i = 0; i < selectedOptions.length; i++) {
         const genre = selectedOptions[i].value;
+        console.log("genre:", genre);
 
-        // Create a query to find documents with the specified genre
-        const q = query(collection(db, "tags"), where("id", "==", genre));
+        const q = query(collection(db, "tags"), where("id", "==", genre || ""));
         const querySnapshot = await getDocs(q);
 
-        // Iterate over each document in the query snapshot
         for (const docSnap of querySnapshot.docs) {
-          const docRef = docSnap.ref; // Document reference
-          const docData = docSnap.data(); // Document data
+          const docRef = docSnap.ref;
+          const docData = docSnap.data();
+          console.log("docData:", docData);
 
-          // Add the new image to the existing images array
           const ids = [...(docData.images || []), postData.id];
 
-          // Update the document with the new images array
           await updateDoc(docRef, { images: ids });
         }
       }
@@ -268,9 +262,10 @@ export const uploadFile = async (
 
 export const getPin = async (pinId: string): Promise<pinType | undefined> => {
   if (pinId) {
+    console.log("getPin - pinId: ", pinId!.replace("%20", " "));
     var q = query(
       collection(db, "pins"),
-      where("id", "==", pinId!.replace("%20", " "))
+      where("id", "==", pinId!.replace("%20", " ") || "")
     );
 
     const querySnapshot = await getDocs(q);
@@ -297,12 +292,14 @@ export const getUserPins2 = async (
     userImage: string;
   } | null
 ) => {
+  console.log("getUserPins2 - user: ", user?.email);
+  console.log("getUserPins2 - GuestUser: ", GuestUser?.email);
   const q = query(
     collection(db, "pins"),
     where(
       "email",
       "==",
-      (user?.email as string) || (GuestUser?.email as string)
+      (user?.email as string) || (GuestUser?.email as string) || ""
     )
   );
 
@@ -310,8 +307,11 @@ export const getUserPins2 = async (
 
   const pins: pinType[] = [];
   querySnapshot.forEach((doc) => {
+    console.log("getUserPins2 - doc.data(): ", doc.data());
     pins.push(doc.data() as pinType);
   });
+
+  console.log("getUserPins2 - pins: ", pins);
   return pins;
 };
 
@@ -352,10 +352,15 @@ export const deletePin = async (pin: {
   id: string;
 }) => {
   try {
+    console.log("deletePin - pin: ", pin);
     let _id = pin.id.match(/(\d+)/);
     let __id = _id![0];
 
+    console.log("deletePin - __id: ", __id);
     await deleteDoc(doc(db, "pins", __id));
+    console.log("Document successfully deleted!");
+
+    return __id;
   } catch (error) {
     console.error("Error deleting pin:", error);
   }

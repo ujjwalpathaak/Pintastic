@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { getProviders, signIn, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import useStore from "../store";
 
@@ -12,7 +12,7 @@ interface Provider {
 
 const page = () => {
   const { data: session } = useSession();
-  const { Guestlogin, logout } = useStore();
+  const { Guestlogin } = useStore();
   const [providers, setProviders] = useState<Provider | null>(null);
   const router = useRouter();
 
@@ -57,11 +57,11 @@ const page = () => {
           stunning photography, or fashion-forward trends, we've got you
           covered. Get ready to dive into a world of endless inspiration!
         </p>
-        <div className="flex justify-center flex-row sm:flex-col items-center w-full mb-3 gap-2 md:mt-5 ">
+        <div className="flex justify-center flex-col items-center w-full mb-3 gap-2 md:mt-5 ">
           <div className="flex h-12 justify-center items-center mt-8">
             <button
               onClick={() => signIn(provider.id)}
-              className="px-2 md:px5 py-2 md:py-3 bg-white min-w-[50px] md:min-w-[200px] justify-center border flex gap-0 md:gap-2 border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150"
+              className="px-2 md:px5 py-2 md:py-3 bg-white text-xs md:text-base min-w-[50px] md:min-w-[200px] justify-center border flex gap-0 md:gap-2 items-center border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150"
             >
               <Image
                 className="w-6 h-6"
@@ -82,7 +82,7 @@ const page = () => {
 
             <button
               onClick={() => signInGuest()}
-              className="px-2 md:px5 py-2 md:py-3 border flex gap-2 min-w-[50px] md:min-w-[200px] justify-center  bg-white border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150"
+              className="px-2 md:px5 py-2 sm:py-3 text-xs md:text-base border flex gap-2 min-w-[50px] md:min-w-[200px] justify-center items-center  bg-white border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150"
             >
               <Image
                 className="w-6 h-6"
@@ -97,7 +97,7 @@ const page = () => {
           </div>
           <button
             onClick={() => router.push("/homepage")}
-            className="relative inline text-lg group"
+            className="relative inline text-lg group mt-5 md:mt-0"
           >
             <span className="relative mt-Gues z-10 block px-5 py-3 overflow-hidden font-medium leading-tight text-quadnary transition-colors duration-400 ease-out border-2 border-quadnary rounded-lg group-hover:text-white">
               <span className="absolute inset-0 w-full h-full px-5 py-3 rounded-lg bg-gray-50"></span>
