@@ -30,8 +30,6 @@ function PinItem({ pin }: pinType) {
   const handleDeletePin = async (pin: any) => {
     try {
       const result = await deletePin(pin);
-      console.log("Pin deleted: ", result);
-      console.log("user?.email: ", user?.email);
     } catch (error) {
       console.error("Error deleting pin: ", error);
     }
@@ -51,7 +49,6 @@ function PinItem({ pin }: pinType) {
         type="button"
         onClick={async () => {
           await handleDeletePin(pin);
-          console.log("Reload page");
           router.push("/homepage");
         }}
         className="text-black absolute bottom-2 left-2 p-1 z-30 rounded-full hover:text-black border border-black hover:bg-slate-200 bg-white focus:ring-4 focus:outline-none focus:ring-white font-medium text-base text-center"

@@ -166,7 +166,7 @@ function Header() {
         </Link>
 
         {session?.user || GuestUser ? (
-          <div className="flex items-center">
+          <div className="hidden sm:flex items-center">
             <Link
               href={`/homepage/${
                 session?.user ? session?.user?.email : GuestUser?.email

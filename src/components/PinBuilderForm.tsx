@@ -71,8 +71,6 @@ function Form() {
       return;
     }
     setLoading(true);
-    console.log("selectedOptions:", selectedOptions);
-    console.log("sentAPI call");
     await uploadFile(
       user,
       GuestUser,
@@ -83,7 +81,6 @@ function Form() {
       setLoading,
       selectedOptions
     );
-    console.log("waiting for response");
     router.push("/homepage/" + user?.email);
     router.refresh();
   };

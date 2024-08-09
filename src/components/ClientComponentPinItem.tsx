@@ -17,22 +17,15 @@ function ClientComponent({
 }: pinTypeHover) {
   const router = useRouter();
   const { user, isLoggedIn } = useStore();
-  const imageRef = useRef<HTMLImageElement | null>(null);
 
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    const handleImageLoad = () => setLoaded(true);
-
     if (pin?.image) {
       const img = new window.Image();
       img.src = pin.image;
-      img.onload = handleImageLoad;
+      img.onload = () => setLoaded(true);
     }
-
-    return () => {
-      setLoaded(false);
-    };
   }, [pin?.image]);
 
   const userTag = {
@@ -81,7 +74,7 @@ function ClientComponent({
             height={500}
             objectFit="contain"
             className={`inset-0 transition-opacity duration-500 ${
-              loaded ? "hidden" : "opacity-100"
+              loaded ? "hidden" : "block"
             } rounded-2xl`}
             priority
           />
@@ -92,7 +85,7 @@ function ClientComponent({
             height={500}
             objectFit="contain"
             className={`inset-0 transition-opacity duration-500 ${
-              loaded ? "opacity-100" : "hidden"
+              loaded ? "block" : "hidden"
             } rounded-2xl`}
             onLoad={() => setLoaded(true)}
             priority
@@ -135,7 +128,7 @@ function ClientComponent({
             height={500}
             objectFit="contain"
             className={`inset-0 transition-opacity duration-500 ${
-              loaded ? "hidden" : "opacity-100"
+              loaded ? "hidden" : "block"
             } rounded-2xl`}
             priority
           />
@@ -146,7 +139,7 @@ function ClientComponent({
             height={500}
             objectFit="contain"
             className={`inset-0 transition-opacity duration-500 ${
-              loaded ? "opacity-100" : "hidden"
+              loaded ? "block" : "hidden"
             } rounded-2xl`}
             onLoad={() => setLoaded(true)}
             priority
