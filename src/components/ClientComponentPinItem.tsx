@@ -67,29 +67,28 @@ function ClientComponent({
               </div>
             </div>
           </div>
-          <Image
-            src={pin.lowResImage}
-            alt={pin.title}
-            width={500}
-            height={500}
-            objectFit="contain"
-            className={`inset-0 transition-opacity duration-500 ${
-              loaded ? "hidden" : "block"
-            } rounded-2xl`}
-            priority
-          />
-          <Image
-            src={pin.image}
-            alt={pin.title}
-            width={500}
-            height={500}
-            objectFit="contain"
-            className={`inset-0 transition-opacity duration-500 ${
-              loaded ? "block" : "hidden"
-            } rounded-2xl`}
-            onLoad={() => setLoaded(true)}
-            priority
-          />
+          {!loaded ? (
+            <Image
+              src={pin.lowResImage}
+              alt="pin"
+              width={500}
+              height={500}
+              objectFit="contain"
+              className={`inset-0 transition-opacity duration-500 rounded-2xl`}
+              priority
+            />
+          ) : (
+            <Image
+              src={pin.image}
+              alt="pin"
+              width={500}
+              height={500}
+              objectFit="contain"
+              className={`inset-0 transition-opacity duration-500 rounded-2xl`}
+              onLoad={() => setLoaded(true)}
+              priority
+            />
+          )}
         </div>
       ) : (
         <div
@@ -121,29 +120,28 @@ function ClientComponent({
               </div>
             </div>
           )}
-          <Image
-            src={pin.lowResImage}
-            alt={pin.title}
-            width={500}
-            height={500}
-            objectFit="contain"
-            className={`inset-0 transition-opacity duration-500 ${
-              loaded ? "hidden" : "block"
-            } rounded-2xl`}
-            priority
-          />
-          <Image
-            src={pin.image}
-            alt={pin.title}
-            width={500}
-            height={500}
-            objectFit="contain"
-            className={`inset-0 transition-opacity duration-500 ${
-              loaded ? "block" : "hidden"
-            } rounded-2xl`}
-            onLoad={() => setLoaded(true)}
-            priority
-          />
+          {!loaded ? (
+            <Image
+              src={pin.lowResImage}
+              alt="pin"
+              width={500}
+              height={500}
+              objectFit="contain"
+              className={`inset-0 transition-opacity duration-500 rounded-2xl`}
+              priority
+            />
+          ) : (
+            <Image
+              src={pin.image}
+              alt="pin"
+              width={500}
+              height={500}
+              objectFit="contain"
+              className={`inset-0 transition-opacity duration-500 rounded-2xl`}
+              onLoad={() => setLoaded(true)}
+              priority
+            />
+          )}
         </div>
       )}
     </>

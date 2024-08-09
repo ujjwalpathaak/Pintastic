@@ -40,7 +40,7 @@ function PinItem({ pin }: pinType) {
       <Image
         ref={imageRef}
         src={pin.image}
-        alt={pin.title}
+        alt="pin"
         width={500}
         height={500}
         className="rounded-2xl cursor-pointer z-0"

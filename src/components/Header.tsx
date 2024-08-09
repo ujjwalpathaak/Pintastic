@@ -171,7 +171,7 @@ function Header() {
               href={`/homepage/${
                 session?.user ? session?.user?.email : GuestUser?.email
               }`}
-              className=" mr-2 text-quadnary hover:bg-secondary p-1 sm:p-3 font-bold rounded-full text-xs sm:text-lg"
+              className=" mr-2 text-quadnary hover:bg-secondary hidden sm:block p-1 sm:p-3 font-bold rounded-full text-xs sm:text-lg"
             >
               Profile
             </Link>
@@ -186,7 +186,7 @@ function Header() {
               alt="user-image"
               width={45}
               height={45}
-              className="hover:bg-secondary hidden sm:block rounded-full cursor-pointer"
+              className="hover:bg-secondary rounded-full cursor-pointer"
             />
           </div>
         ) : (

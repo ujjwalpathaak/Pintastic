@@ -40,7 +40,7 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ pin }) => {
             <div className="relative w-full h-full">
               <Image
                 src={pin.lowResImage}
-                alt={pin.title}
+                alt="pin"
                 layout="fill"
                 objectFit="contain"
                 className={`absolute inset-0 transition-opacity duration-500 ${
@@ -50,7 +50,7 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ pin }) => {
               />
               <Image
                 src={pin.image}
-                alt={pin.title}
+                alt="pin"
                 layout="fill"
                 objectFit="contain"
                 className={`absolute inset-0 transition-opacity duration-500 ${
