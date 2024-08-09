@@ -166,7 +166,7 @@ function Header() {
         </Link>
 
         {session?.user || GuestUser ? (
-          <div className="hidden sm:flex items-center">
+          <div className="flex items-center">
             <Link
               href={`/homepage/${
                 session?.user ? session?.user?.email : GuestUser?.email
@@ -186,7 +186,7 @@ function Header() {
               alt="user-image"
               width={45}
               height={45}
-              className="hover:bg-secondary rounded-full cursor-pointer"
+              className="hover:bg-secondary hidden sm:block rounded-full cursor-pointer"
             />
           </div>
         ) : (
