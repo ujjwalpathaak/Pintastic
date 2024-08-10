@@ -23,6 +23,10 @@ function ClientComponent({
     image: pin?.userImage,
   };
 
+  if (!pin) {
+    return <></>;
+  }
+
   return (
     <>
       {isMobile ? (
@@ -36,7 +40,7 @@ function ClientComponent({
             <div className="flex flex-col h-full justify-between">
               <div className="h-fit flex justify-start items-start bg-black/30 rounded-tl-2xl rounded-tr-2xl">
                 <h2 className="font-bold text-[15px] z-20 mt-[0.5rem] ml-[0.5rem] mb-1 text-white line-clamp-2 absolute">
-                  {pin.title}
+                  {pin?.title}
                 </h2>
               </div>
               <div className="h-1/2 flex justify-between items-end w-full">
@@ -54,7 +58,7 @@ function ClientComponent({
             </div>
           </div>
           <Image
-            src={pin.image}
+            src={pin?.image}
             alt="pin"
             width={500}
             height={500}
@@ -75,7 +79,7 @@ function ClientComponent({
               <div className="flex flex-col h-full justify-between">
                 <div className="h-1/2 flex justify-start items-start">
                   <h2 className="font-bold text-[18px] z-20 mt-[0.5rem] ml-[0.5rem] mb-1 text-white line-clamp-2 absolute">
-                    {pin.title}
+                    {pin?.title}
                   </h2>
                 </div>
                 <div className="h-1/2 flex justify-between items-end w-full">
@@ -94,7 +98,7 @@ function ClientComponent({
             </div>
           )}
           <Image
-            src={pin.image}
+            src={pin?.image}
             alt="pin"
             width={500}
             height={500}

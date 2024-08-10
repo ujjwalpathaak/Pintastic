@@ -29,7 +29,7 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ pin }) => {
           <div className="flex justify-end h-full items-center w-full flex-col">
             <div className="relative w-full h-full">
               <Image
-                src={pin.image}
+                src={pin?.image}
                 alt="pin"
                 layout="fill"
                 objectFit="contain"
@@ -56,7 +56,7 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ pin }) => {
         <div className="px-12 pb-3 lg:p-16 lg:pb-3 w-full lg:w-[50%]">
           <div>
             <h1 className="text-3xl lg:text-5xl text-quadnary font-bold mb-5 lg:mb-10">
-              {pin.title}
+              {pin?.title}
             </h1>
             <h2 className="mt-5 lg:mt-10 text-quadnary ">{pin.desc}</h2>
           </div>

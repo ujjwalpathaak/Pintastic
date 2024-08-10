@@ -39,7 +39,7 @@ function PinItem({ pin }: pinType) {
     <div className="z-20 relative">
       <Image
         ref={imageRef}
-        src={pin.image}
+        src={pin?.image}
         alt="pin"
         width={500}
         height={500}
