@@ -13,16 +13,6 @@ interface ClientComponentProps {
 }
 
 const ClientComponent: React.FC<ClientComponentProps> = ({ pin }) => {
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    if (pin?.image) {
-      const img = new window.Image();
-      img.src = pin.image;
-      img.onload = () => setLoaded(true);
-    }
-  }, [pin?.image]);
-
   return (
     <div className="bg-primary pt-3 pb-6 h-[90vh] rounded-2xl md:px-24 lg:px-36">
       <div className="bg-[#efefef] h-full flex lg:flex-row flex-col rounded-2xl py-2 lg:py-[2rem] xl:pd-16">
@@ -39,24 +29,10 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ pin }) => {
           <div className="flex justify-end h-full items-center w-full flex-col">
             <div className="relative w-full h-full">
               <Image
-                src={pin.lowResImage}
-                alt="pin"
-                layout="fill"
-                objectFit="contain"
-                className={`absolute inset-0 transition-opacity duration-500 ${
-                  loaded ? "opacity-0" : "opacity-100"
-                } rounded-2xl`}
-                priority
-              />
-              <Image
                 src={pin.image}
                 alt="pin"
                 layout="fill"
                 objectFit="contain"
-                className={`absolute inset-0 transition-opacity duration-500 ${
-                  loaded ? "opacity-100" : "opacity-0"
-                } rounded-2xl`}
-                onLoad={() => setLoaded(true)}
               />
             </div>
             <div className="h-[20%] lg:h-[10%] flex item-center">

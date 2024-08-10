@@ -18,24 +18,10 @@ function ClientComponent({
   const router = useRouter();
   const { user, isLoggedIn } = useStore();
 
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    if (pin?.image) {
-      const img = new window.Image();
-      img.src = pin.image;
-      img.onload = () => setLoaded(true);
-    }
-  }, [pin?.image]);
-
   const userTag = {
     name: pin?.userName,
     image: pin?.userImage,
   };
-
-  if (!pin?.lowResImage || !pin?.image) {
-    return <div></div>;
-  }
 
   return (
     <>
@@ -67,28 +53,15 @@ function ClientComponent({
               </div>
             </div>
           </div>
-          {!loaded ? (
-            <Image
-              src={pin.lowResImage}
-              alt="pin"
-              width={500}
-              height={500}
-              objectFit="contain"
-              className={`inset-0 transition-opacity duration-500 rounded-2xl`}
-              priority
-            />
-          ) : (
-            <Image
-              src={pin.image}
-              alt="pin"
-              width={500}
-              height={500}
-              objectFit="contain"
-              className={`inset-0 transition-opacity duration-500 rounded-2xl`}
-              onLoad={() => setLoaded(true)}
-              priority
-            />
-          )}
+          <Image
+            src={pin.image}
+            alt="pin"
+            width={500}
+            height={500}
+            objectFit="contain"
+            className={`inset-0 transition-opacity duration-500 rounded-2xl`}
+            priority
+          />
         </div>
       ) : (
         <div
@@ -120,28 +93,15 @@ function ClientComponent({
               </div>
             </div>
           )}
-          {!loaded ? (
-            <Image
-              src={pin.lowResImage}
-              alt="pin"
-              width={500}
-              height={500}
-              objectFit="contain"
-              className={`inset-0 transition-opacity duration-500 rounded-2xl`}
-              priority
-            />
-          ) : (
-            <Image
-              src={pin.image}
-              alt="pin"
-              width={500}
-              height={500}
-              objectFit="contain"
-              className={`inset-0 transition-opacity duration-500 rounded-2xl`}
-              onLoad={() => setLoaded(true)}
-              priority
-            />
-          )}
+          <Image
+            src={pin.image}
+            alt="pin"
+            width={500}
+            height={500}
+            objectFit="contain"
+            className={`inset-0 transition-opacity duration-500 rounded-2xl`}
+            priority
+          />
         </div>
       )}
     </>

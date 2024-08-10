@@ -18,51 +18,51 @@ import { SetStateAction } from "react";
 const storage = getStorage(app);
 const db = getFirestore(app);
 
-const resizeImage = (
-  file: File,
-  maxWidth: number,
-  maxHeight: number
-): Promise<Blob> => {
-  return new Promise((resolve) => {
-    const img = document.createElement("img");
-    const reader = new FileReader();
+// const resizeImage = (
+//   file: File,
+//   maxWidth: number,
+//   maxHeight: number
+// ): Promise<Blob> => {
+//   return new Promise((resolve) => {
+//     const img = document.createElement("img");
+//     const reader = new FileReader();
 
-    reader.onload = () => {
-      img.src = reader.result as string;
-    };
+//     reader.onload = () => {
+//       img.src = reader.result as string;
+//     };
 
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d")!;
-      let width = img.width;
-      let height = img.height;
+//     img.onload = () => {
+//       const canvas = document.createElement("canvas");
+//       const ctx = canvas.getContext("2d")!;
+//       let width = img.width;
+//       let height = img.height;
 
-      if (width > maxWidth) {
-        height *= maxWidth / width;
-        width = maxWidth;
-      }
+//       if (width > maxWidth) {
+//         height *= maxWidth / width;
+//         width = maxWidth;
+//       }
 
-      if (height > maxHeight) {
-        width *= maxHeight / height;
-        height = maxHeight;
-      }
+//       if (height > maxHeight) {
+//         width *= maxHeight / height;
+//         height = maxHeight;
+//       }
 
-      canvas.width = width;
-      canvas.height = height;
+//       canvas.width = width;
+//       canvas.height = height;
 
-      ctx.drawImage(img, 0, 0, width, height);
+//       ctx.drawImage(img, 0, 0, width, height);
 
-      ctx.filter = "blur(10px)";
-      ctx.drawImage(canvas, 0, 0, width, height);
+//       ctx.filter = "blur(10px)";
+//       ctx.drawImage(canvas, 0, 0, width, height);
 
-      canvas.toBlob((blob) => {
-        if (blob) resolve(blob);
-      }, file.type);
-    };
+//       canvas.toBlob((blob) => {
+//         if (blob) resolve(blob);
+//       }, file.type);
+//     };
 
-    reader.readAsDataURL(file);
-  });
-};
+//     reader.readAsDataURL(file);
+//   });
+// };
 
 export const getGenrePins = async (genre: string) => {
   const q = query(collection(db, "tags"), where("id", "==", genre || ""));
@@ -202,12 +202,6 @@ export const uploadFile = async (
       return getDownloadURL(storageRef);
     })
     .then(async (url) => {
-      const lowResBlob = await resizeImage(file, 400, 400);
-      const lowResRef = ref(storage, "low_resolution/" + file.name);
-
-      await uploadBytes(lowResRef, lowResBlob);
-
-      const lowResUrl = await getDownloadURL(lowResRef);
       let _id = Date.now().toString();
       let userName = user?.userName || GuestUser?.userName;
 
@@ -217,7 +211,6 @@ export const uploadFile = async (
         link: link,
         name: file.name || "undefined",
         image: url,
-        lowResImage: lowResUrl,
         userName: userName,
         email: user?.email || GuestUser?.email,
         userImage: user?.userImage || GuestUser?.userImage,
