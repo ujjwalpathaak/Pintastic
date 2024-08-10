@@ -16,10 +16,16 @@
 ## Screenshots
 
 ### Login Screen
+<img width="1710" alt="Screenshot 2024-08-10 at 8 37 25 AM" src="https://github.com/user-attachments/assets/85dc9ee8-768a-4cda-8eb9-118ed9a55eb9">
 
-### New Meeting Screen
+### Homepage
+<img width="1710" alt="Screenshot 2024-08-10 at 8 38 59 AM" src="https://github.com/user-attachments/assets/4ba8a75a-7821-40c2-a11a-9c3e9e85a0ac">
 
-### Meeting Screen
+### Upload Screen
+<img width="1710" alt="Screenshot 2024-08-10 at 8 40 29 AM" src="https://github.com/user-attachments/assets/49df37c0-6852-40cc-946f-ec1fde57d5da">
+
+### Profile Page
+<img width="1710" alt="Screenshot 2024-08-10 at 8 41 26 AM" src="https://github.com/user-attachments/assets/b3a4449c-c230-4c8d-be71-cbf3c7c3311a">
 
 ## Technical Implementation
 
